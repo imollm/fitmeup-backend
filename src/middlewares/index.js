@@ -76,7 +76,47 @@ module.exports = {
             }
         } catch (error) {
             console.log(error)
+            return res.status(500).json({
+                status: false,
+                message: error
+            })
+        }
+    },
+    registerAdmin: (req, res, next) => {
+        try {
+            const hasRoleBodyAttr = req.body && req.body.hasOwnProperty('role')
+            
+            if (hasRoleBodyAttr && req.body.role === 'user') {
+                return next()
+            }
+
+            const hasAuthorizationHeader = req.headers.hasOwnProperty('authorization')
+            const authHeader = req.header('Authorization')
+            const accessToken = authHeader ? authHeader.split(' ')[1] : null
+
+            if (hasRoleBodyAttr && req.body.role === 'admin') {
+                if (hasAuthorizationHeader && authHeader.indexOf('Bearer') !== -1) {
+                    if (accessToken) {
+                        const JwtManager = new Jwt()
+    
+                        if (JwtManager.isAdmin(accessToken)) {
+                            return next()
+                        }
+        
+                        return res.status(401).json({
+                            status: false,
+                            message: 'You are not authorized'
+                        })
+                    }
+                }
+            }
+
             return res.status(400).json({
+                status: false,
+                message: 'Bad Request'
+            })
+        } catch (error) {
+            return res.status(500).json({
                 status: false,
                 message: error
             })

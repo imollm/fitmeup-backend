@@ -102,6 +102,16 @@ class Jwt {
     invalidateAllRefreshTokens(userId) {
         jwtModel.revokeAllRefreshTokensByUserId(userId)
     }
+
+    isAdmin(accessToken) {
+        try {
+            const tokenDecoded = this.decodeToken(accessToken)
+            
+            return tokenDecoded && tokenDecoded.hasOwnProperty('role') && tokenDecoded.role === 'admin'
+        } catch (error) {
+            return false
+        }
+    }
 }
 
 module.exports = Jwt
