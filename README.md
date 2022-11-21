@@ -240,7 +240,7 @@ docker-compose -f docker-compose.dev.yml exec api npm run test
 - [Claudia Roxana Mendoza López](https://github.com/claudia17018)
 - [Edgar Avila Argamonte](https://github.com/Edgar-Avila)
 - [Marcelo](https://github.com/marcelowebdesigner)
-- [Diego Octavio SAravia Mamani](https://github.com/diegosaraviamamani)
+- [Diego Octavio Saravia Mamani](https://github.com/diegosaraviamamani)
 - [Josué](https://github.com/fjota)
 - [Ivan Moll](https://github.com/imollm)
 
