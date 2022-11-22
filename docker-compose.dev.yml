@@ -1,0 +1,52 @@
+version: "3.7"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: fitmeup-api
+    ports:
+      - ${API_OUTCOMING_PORT}:${API_INCOMING_PORT}
+      - ${API_DEBUG_OUTCOMING_PORT}:${API_DEBUG_INCOMING_PORT}
+    networks:
+      - fitmeup-api-net
+    depends_on:
+      - mongo
+    volumes:
+      - type: bind
+        source: ./src
+        target: /app/src
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - ${DB_OUTCOMING_PORT}:${DB_INCOMING_PORT}
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+    networks:
+      - fitmeup-api-net
+    volumes:
+      - fitmeup-api-vol:/data/db
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - ${MONGO_MANAGER_OUTCOMING_PORT}:${MONGO_MANAGER_INCOMING_PORT}
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USER}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASS}
+      ME_CONFIG_MONGODB_URL: ${MONGO_URL}
+    depends_on:
+      - mongo
+    networks:
+      - fitmeup-api-net
+
+networks:
+  fitmeup-api-net:
+
+volumes:
+  fitmeup-api-vol:
