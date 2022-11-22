@@ -99,13 +99,13 @@ module.exports = {
                     if (accessToken) {
                         const JwtManager = new Jwt()
     
-                        if (JwtManager.isAdmin(accessToken)) {
+                        if (JwtManager.isSuperAdmin(accessToken)) {
                             return next()
                         }
         
                         return res.status(401).json({
                             status: false,
-                            message: 'You are not authorized'
+                            message: 'You are not a superadmin'
                         })
                     }
                 }

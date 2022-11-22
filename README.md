@@ -106,6 +106,14 @@ about the gym they're attending to.
             <td>BCRYPT_SALT</td>
             <td>This value indicates number of rounds to generate the password, it must be a number.</td>
         </tr>
+        <tr>
+            <td>SUPERADMIN_EMAIL</td>
+            <td>Email of super admin of the application</td>
+        </tr>
+        <tr>
+            <td>SUPERADMIN_PASS</td>
+            <td>Password of super admin of the application</td>
+        </tr>
     </tbody>
 </table>
 
@@ -140,7 +148,9 @@ TOKEN_SECRET=
 REFRESH_TOKEN_SECRET=
 TOKEN_EXP_TIME=
 REFRESH_TOKEN_EXP_TIME=
-BCRYPT_SALT=" > <project path>/.env
+BCRYPT_SALT=
+SUPERADMIN_EMAIL=
+SUPERADMIN_PASS=" > <project path>/.env
 ```
 #### 2.2.2 Start
 1. Set up .env file
@@ -182,7 +192,9 @@ TOKEN_SECRET=
 REFRESH_TOKEN_SECRET=
 TOKEN_EXP_TIME=
 REFRESH_TOKEN_EXP_TIME=
-BCRYPT_SALT=" > <project path>/.env
+BCRYPT_SALT=
+SUPERADMIN_EMAIL=
+SUPERADMIN_PASS=" > <project path>/.env
 ```
 #### 2.3.2 Start
 1. Set up .env file

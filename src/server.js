@@ -9,8 +9,11 @@ const PORT = config.incomingPort
 
 const app = express()
 
-const connect = async () => await new MongoDBClient().connect()
+const mongoClient = new MongoDBClient()
+const connect = async () => await mongoClient.connect()
+const seedSuperAdmin = async () => await mongoClient.seedSuperAdminUser()
 connect()
+seedSuperAdmin()
 
 middlewares.init(app)
 

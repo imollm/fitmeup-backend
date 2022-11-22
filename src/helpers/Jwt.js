@@ -103,11 +103,11 @@ class Jwt {
         jwtModel.revokeAllRefreshTokensByUserId(userId)
     }
 
-    isAdmin(accessToken) {
+    isSuperAdmin(accessToken) {
         try {
             const tokenDecoded = this.decodeToken(accessToken)
             
-            return tokenDecoded && tokenDecoded.hasOwnProperty('role') && tokenDecoded.role === 'admin'
+            return tokenDecoded && tokenDecoded.hasOwnProperty('role') && tokenDecoded.role === 'superadmin'
         } catch (error) {
             return false
         }

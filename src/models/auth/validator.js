@@ -8,7 +8,7 @@ const schemaRegister = Joi.object({
     lastName: Joi.string().min(2).max(255),
     email: Joi.string().min(6).max(255).required().email(),
     password: Joi.string().min(6).max(1024).required(),
-    role: Joi.string().required().valid('user','admin'),
+    role: Joi.string().required().valid('user','admin','superadmin'),
     gymId: Joi.string().required()
 })
 

@@ -1,4 +1,5 @@
 const { parsed } = require('dotenv').config()
+const bcrypt = require('bcrypt')
 
 module.exports = {
     mongoUrl:               parsed.MONGO_URL,
@@ -7,5 +8,7 @@ module.exports = {
     refreshTokenSecret:     parsed.REFRESH_TOKEN_SECRET,
     tokenExpTime:           String(parsed.TOKEN_EXP_TIME),
     refreshTokenExpTime:    String(parsed.REFRESH_TOKEN_EXP_TIME),
-    bcryptSalt:             Number(parsed.BCRYPT_SALT)
+    bcryptSalt:             Number(parsed.BCRYPT_SALT),
+    superAdminEmail:        parsed.SUPERADMIN_EMAIL,
+    superAdminPass:         bcrypt.hashSync(parsed.SUPERADMIN_PASS, bcrypt.genSaltSync(Number(parsed.BCRYPT_SALT)))
 }
