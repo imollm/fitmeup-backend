@@ -121,5 +121,32 @@ module.exports = {
                 message: error
             })
         }
+    },
+    isAdmin: (req, res, next) => {
+        try {
+            const hasAuthorizationHeader = req.headers.hasOwnProperty('authorization')
+            const authHeader = req.header('Authorization')
+            const accessToken = authHeader ? authHeader.split(' ')[1] : null
+
+            if (hasAuthorizationHeader && authHeader.indexOf('Bearer') !== -1) {
+                if (accessToken) {
+                    const JwtManager = new Jwt()
+    
+                    if (JwtManager.isAdmin(accessToken)) {
+                        return next()
+                    }
+    
+                    return res.status(401).json({
+                        status: false,
+                        message: 'You are not an admin'
+                    })
+                }
+            }
+        } catch (error) {
+            return res.status(500).json({
+                status: false,
+                message: error
+            })
+        }
     }
 }
