@@ -47,5 +47,38 @@ module.exports = {
                 message: error
             })
         }
+    },
+    getById: async (req, res) => {
+        try {
+            const gymId = req.params.id
+
+            if (!gymId || gymId === '') {
+                return res.status(400).json({
+                    status: false,
+                    message: 'You have to send the id of gym'
+                })
+            }
+
+            const gym = await gymModel.getById(gymId)
+
+            if (!gym) {
+                return res.status(500).json({
+                    status: false,
+                    message: 'Error while retrieve gym'
+                })
+            }
+
+            return res.json({
+                status: true,
+                data: gym,
+                message: 'You got the requested gym'
+            })
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                status: false,
+                message: error
+            })
+        }
     }
 }

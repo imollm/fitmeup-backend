@@ -8,5 +8,8 @@ module.exports = {
     },
     getByEmail: async (email) => {
         return await gymCollection.findOne({ email: email })
+    },
+    getById: async (gymId) => {
+        return await gymCollection.findById(gymId)
     }
 }
