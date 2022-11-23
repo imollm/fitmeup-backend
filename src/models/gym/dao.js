@@ -11,5 +11,8 @@ module.exports = {
     },
     getById: async (id) => {
         return await gymCollection.findById(id)
+    },
+    getAll: async () => {
+        return await gymCollection.find({})
     }
 }

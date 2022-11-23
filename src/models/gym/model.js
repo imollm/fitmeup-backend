@@ -32,5 +32,12 @@ module.exports = {
     getById: async (id) => {
         const gym = await gymDAO.getById(id)
         return getStdGymObj(gym)
+    },
+    getAll: async () => {
+        const gyms = await gymDAO.getAll()
+
+        return gyms.map((gym) => {
+            return getStdGymObj(gym)
+        })
     }
 }

@@ -104,5 +104,14 @@ module.exports = {
                 message: error
             })
         }
+    },
+    getAll: async (_, res) => {
+        const gyms = await gymModel.getAll()
+
+        return res.json({
+            status: true,
+            data: gyms,
+            message: 'You got all gyms!'
+        })
     }
 }

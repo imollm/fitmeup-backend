@@ -7,5 +7,6 @@ const middlewares = require('../../middlewares')
 
 router.post('/', middlewares.isAdmin, gymController.create)
 router.get('/:id', gymController.getById)
+router.get('/', gymController.getAll)
 
 module.exports = router
