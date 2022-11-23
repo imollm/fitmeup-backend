@@ -29,8 +29,8 @@ module.exports = {
     getByEmail: async (email) => {
         return await gymDAO.getByEmail(email)
     },
-    getById: async (gymId) => {
-        const gym = await gymDAO.getById(gymId)
+    getById: async (id) => {
+        const gym = await gymDAO.getById(id)
         return getStdGymObj(gym)
     }
 }

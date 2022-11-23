@@ -2,6 +2,7 @@
 
 const validator = require('./validator')
 const gymModel = require('./model')
+const userModel = require('../user/model')
 
 module.exports = {
     create: async (req, res) => {
@@ -25,6 +26,22 @@ module.exports = {
                 })
             }
 
+            const adminUser = await userModel.getById(gymData.adminId)
+
+            if (!adminUser) {
+                return res.status(404).json({
+                    status: false,
+                    message: `Admin user doesn\'t exists with id ${gymData.adminId}`
+                })
+            }
+
+            if (adminUser && adminUser.role !== 'admin') {
+                return res.status(400).json({
+                    status: false,
+                    message: 'You are sending wrong admin id'
+                })
+            }
+
             const newGym = await gymModel.create(gymData)
 
             if (!newGym) {
@@ -41,11 +58,18 @@ module.exports = {
             })
 
         } catch(error) {
-            console.log(error)
-            return res.status(500).json({
-                status: false,
-                message: error
-            })
+            if (error.kind === 'ObjectId') {
+                return res.status(404).json({
+                    status: false,
+                    message: `Admin user doesn\'t exists with id ${error.value}`
+                })
+            } else {
+                console.log(error)
+                return res.status(500).json({
+                    status: false,
+                    message: error
+                })
+            }
         }
     },
     getById: async (req, res) => {

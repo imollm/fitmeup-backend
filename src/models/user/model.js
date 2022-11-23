@@ -17,5 +17,8 @@ module.exports = {
     },
     getByEmail: (email) => {
         return userDAO.getByEmail(email)
+    },
+    getById: (id) => {
+        return userDAO.getById(id)
     }
 }
