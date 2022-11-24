@@ -5,12 +5,13 @@ const express = require('express')
 const cors = require('cors')
 const jwt = require('jsonwebtoken')
 const Jwt = require('../helpers/Jwt')
+const config = require('../config')
 
 module.exports = {
     init: (app) => {
         app.use(bodyParser.urlencoded({ extended: false }))
         app.use(bodyParser.json())
-        app.use(express.json())
+        app.use(express.json({limit: config.limitBody}))
         app.use(cors({
             origin: '*',
             optionsSuccessStatus: 200

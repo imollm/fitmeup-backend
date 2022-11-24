@@ -114,6 +114,10 @@ about the gym they're attending to.
             <td>SUPERADMIN_PASS</td>
             <td>Password of super admin of the application</td>
         </tr>
+        <tr>
+            <td>API_LIMIT_CONTENT_LENGTH</td>
+            <td>The limit of request body JSON, check Content-Length HTTP header</td>
+        </tr>
     </tbody>
 </table>
 
@@ -150,7 +154,8 @@ TOKEN_EXP_TIME=
 REFRESH_TOKEN_EXP_TIME=
 BCRYPT_SALT=
 SUPERADMIN_EMAIL=
-SUPERADMIN_PASS=" > <project path>/.env
+SUPERADMIN_PASS=
+API_LIMIT_CONTENT_LENGTH=" > <project path>/.env
 ```
 #### 2.2.2 Start
 1. Set up .env file
@@ -194,7 +199,8 @@ TOKEN_EXP_TIME=
 REFRESH_TOKEN_EXP_TIME=
 BCRYPT_SALT=
 SUPERADMIN_EMAIL=
-SUPERADMIN_PASS=" > <project path>/.env
+SUPERADMIN_PASS=
+API_LIMIT_CONTENT_LENGTH=" > <project path>/.env
 ```
 #### 2.3.2 Start
 1. Set up .env file
