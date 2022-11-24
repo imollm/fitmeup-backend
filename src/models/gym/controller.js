@@ -113,5 +113,49 @@ module.exports = {
             data: gyms,
             message: 'You got all gyms!'
         })
+    },
+    update: async (req, res) => {
+        try {
+            const gymId = req.params.id
+            const gymData = req.body
+            const validation = validator.validateGym(gymData)
+
+            if (validation) {
+                return res.status(422).json({
+                    status: false,
+                    message: validation
+                })
+            }
+
+            const gym = await gymModel.getById(gymId)
+
+            if (!gym) {
+                return res.status(404).json({
+                    status: false,
+                    message: 'The gym with given id doesn\'t exists'
+                })
+            }
+
+            const gymUpdated = await gymModel.update(gymId, gymData)
+
+            if (!gymUpdated) {
+                return res.status(500).json({
+                    status: false,
+                    message: 'There was a problem while updating gym'
+                })
+            }
+
+            return res.status(200).json({
+                status: true,
+                data: gymUpdated,
+                message: 'gym update'
+            })
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                status: false,
+                message: error
+            })
+        }
     }
 }

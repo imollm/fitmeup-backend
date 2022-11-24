@@ -39,5 +39,9 @@ module.exports = {
         return gyms.map((gym) => {
             return getStdGymObj(gym)
         })
+    },
+    update: async (id, gymData) => {
+        const gymUpdated = await gymDAO.update(id, gymData)
+        return getStdGymObj(gymUpdated)
     }
 }

@@ -6,6 +6,7 @@ const cors = require('cors')
 const jwt = require('jsonwebtoken')
 const Jwt = require('../helpers/Jwt')
 const config = require('../config')
+const gymModel = require('../models/gym/model')
 
 module.exports = {
     init: (app) => {
@@ -143,6 +144,34 @@ module.exports = {
                     })
                 }
             }
+        } catch (error) {
+            return res.status(500).json({
+                status: false,
+                message: error
+            })
+        }
+    },
+    isOwnerOfGym: async (req, res, next) => {
+        try {
+            const gymId = req.params.id
+            const adminId = req.body.adminId
+            const accessToken = req.header('authorization').split(' ')[1]
+
+            if (gymId && accessToken && adminId) {
+                const JwtManager = new Jwt()
+                const tokenDecoded = JwtManager.decodeToken(accessToken)
+                const adminIdFromToken = tokenDecoded._id
+                const gym = await gymModel.getById(gymId)
+
+                if (gym.adminId === adminIdFromToken && gym.adminId === adminId) {
+                    return next()
+                }
+            }
+
+            return res.status(400).json({
+                status: false,
+                message: 'Check your request, you have some wrong info'
+            })
         } catch (error) {
             return res.status(500).json({
                 status: false,

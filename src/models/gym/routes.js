@@ -8,5 +8,10 @@ const middlewares = require('../../middlewares')
 router.post('/', middlewares.isAdmin, gymController.create)
 router.get('/:id', gymController.getById)
 router.get('/', gymController.getAll)
+router.put('/:id', [
+    middlewares.auth,
+    middlewares.isAdmin,
+    middlewares.isOwnerOfGym
+], gymController.update)
 
 module.exports = router
