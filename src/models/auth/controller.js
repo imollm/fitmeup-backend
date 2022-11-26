@@ -32,10 +32,10 @@ module.exports = {
             const newUser = await userModel.create(userData)
 
             return res.status(201).json({
-                status: true,
-                data: newUser,
-                message: 'User has been created!'
-            })
+                    status: true,
+                    data: newUser,
+                    message: 'User has been created!'
+                })
         } catch (error) {
             console.log(error)
             return res.status(500).json({
@@ -73,8 +73,8 @@ module.exports = {
             }
 
             const { accessToken, refreshToken } = (new Jwt()).generateToken(user)
-            jwtModel.saveAccessToken(user._id, accessToken)
-            jwtModel.saveRefreshToken(user._id, refreshToken)
+            jwtModel.saveAccessToken(user.id, accessToken)
+            jwtModel.saveRefreshToken(user.id, refreshToken)
 
             return res.status(200).json({
                 status: true,
@@ -93,7 +93,7 @@ module.exports = {
     me: (req, res) => {
         try {
             const { protocol, hostname, baseUrl, user } = req
-            const location = `${protocol}://${hostname}:${config.incomingPort}${baseUrl.slice(0, 7)}/user/${user._id}`
+            const location = `${protocol}://${hostname}:${config.incomingPort}${baseUrl.slice(0, 7)}/user/${user.id}`
 
             return res
                 .header('Location', location)

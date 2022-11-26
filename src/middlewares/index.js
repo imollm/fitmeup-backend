@@ -160,7 +160,7 @@ module.exports = {
             if (gymId && accessToken && adminId) {
                 const JwtManager = new Jwt()
                 const tokenDecoded = JwtManager.decodeToken(accessToken)
-                const adminIdFromToken = tokenDecoded._id
+                const adminIdFromToken = tokenDecoded.id
                 const gym = await gymModel.getById(gymId)
 
                 if (gym.adminId === adminIdFromToken && gym.adminId === adminId) {

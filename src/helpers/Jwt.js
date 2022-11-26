@@ -34,7 +34,7 @@ class Jwt {
         const expirationTime = { expiresIn: config.tokenExpTime }
         
         return jwt.sign({
-            _id: user._id,
+            id: user._id,
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
@@ -47,7 +47,7 @@ class Jwt {
         const expirationTime = { expiresIn: config.refreshTokenExpTime }
     
         return jwt.sign({
-            _id: user._id,
+            id: user._id,
             email: user.email,
             role: user.role,
         }, config.refreshTokenSecret, expirationTime)
