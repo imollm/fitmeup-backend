@@ -30,8 +30,13 @@ module.exports = {
 
             userData.password = await helpers.encryptPass(userData.password)
             const newUser = await userModel.create(userData)
+            const { protocol, hostname, baseUrl } = req
+            const location = `${protocol}://${hostname}:${config.incomingPort}${baseUrl.slice(0, 7)}/user/${newUser.id}`
 
-            return res.status(201).json({
+            return res
+                .header('Location', location)
+                .status(201)
+                .json({
                     status: true,
                     data: newUser,
                     message: 'User has been created!'
