@@ -13,5 +13,6 @@ router.put('/:id', [
     middlewares.isAdmin,
     middlewares.isOwnerOfGym
 ], gymController.update)
+router.get('/:id/users', gymController.getById)
 
 module.exports = router

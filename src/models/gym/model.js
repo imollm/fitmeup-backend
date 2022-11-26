@@ -1,6 +1,7 @@
 'use strict'
 
 const gymDAO = require('./dao')
+const userModel = require('../user/model')
 
 const getStdGymObj = (gym) => {
     return {
@@ -43,5 +44,8 @@ module.exports = {
     update: async (id, gymData) => {
         const gymUpdated = await gymDAO.update(id, gymData)
         return getStdGymObj(gymUpdated)
+    },
+    getUsers: (gymId) => {
+        return userModel.getUsersByGymId(gymId)
     }
 }

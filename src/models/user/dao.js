@@ -11,5 +11,8 @@ module.exports = {
     },
     getById: async (id) => {
         return await userCollection.findById(id)
+    },
+    getUsersByGymId: async (gymId) => {
+        return await userCollection.find({ gymId: gymId })
     }
 }

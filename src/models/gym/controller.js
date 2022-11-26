@@ -92,6 +92,10 @@ module.exports = {
                 })
             }
 
+            if (req.originalUrl.indexOf('/users') !== -1) {
+                gym.users = await gymModel.getUsers(gymId)
+            }
+
             return res.json({
                 status: true,
                 data: gym,
@@ -148,7 +152,7 @@ module.exports = {
             return res.status(200).json({
                 status: true,
                 data: gymUpdated,
-                message: 'gym update'
+                message: 'Gym has been updated succesfully!'
             })
         } catch (error) {
             console.log(error)
