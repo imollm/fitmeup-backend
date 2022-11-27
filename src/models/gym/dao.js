@@ -32,5 +32,8 @@ module.exports = {
         await gymCollection.findOneAndUpdate({ _id: id }, gymDataObj)
         const gymUpdated = await gymCollection.findById(id)
         return gymUpdated
+    },
+    getGymsByAdminId: async (adminId) => {
+        return await gymCollection.find({ adminId })
     }
 }
