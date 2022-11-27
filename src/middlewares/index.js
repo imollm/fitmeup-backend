@@ -154,14 +154,18 @@ module.exports = {
     isOwnerOfGym: async (req, res, next) => {
         try {
             const gymId = req.params.id
-            const adminId = req.body.adminId
             const accessToken = req.header('authorization').split(' ')[1]
-
-            if (gymId && accessToken && adminId) {
+            
+            if (gymId && accessToken) {
+                const adminId = req.body.adminId
                 const JwtManager = new Jwt()
                 const tokenDecoded = JwtManager.decodeToken(accessToken)
                 const adminIdFromToken = tokenDecoded.id
                 const gym = await gymModel.getById(gymId)
+
+                if (gym.adminId === adminIdFromToken && req.method.toLowerCase() === 'delete') {
+                    return next()
+                }
 
                 if (gym.adminId === adminIdFromToken && gym.adminId === adminId) {
                     return next()

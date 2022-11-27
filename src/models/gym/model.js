@@ -28,11 +28,12 @@ module.exports = {
         return getStdGymObj(gym)
     },
     getByEmail: async (email) => {
-        return await gymDAO.getByEmail(email)
+        const gym = await gymDAO.getByEmail(email)
+        return gym ? getStdGymObj(gym) : null
     },
     getById: async (id) => {
         const gym = await gymDAO.getById(id)
-        return getStdGymObj(gym)
+        return gym ? getStdGymObj(gym) : null
     },
     getAll: async () => {
         const gyms = await gymDAO.getAll()
@@ -43,7 +44,7 @@ module.exports = {
     },
     update: async (id, gymData) => {
         const gymUpdated = await gymDAO.update(id, gymData)
-        return getStdGymObj(gymUpdated)
+        return gymUpdated ? getStdGymObj(gymUpdated) : null
     },
     getUsers: (gymId) => {
         return userModel.getUsersByGymId(gymId)
@@ -54,5 +55,10 @@ module.exports = {
         return gyms.map(gym => {
             return getStdGymObj(gym)
         })
+    },
+    delete: async (gymId) => {
+        const isDeleted = await gymDAO.delete(gymId)
+        // TODO: Remove comments and ratings
+        return isDeleted
     }
 }

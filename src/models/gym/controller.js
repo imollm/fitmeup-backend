@@ -86,9 +86,9 @@ module.exports = {
             const gym = await gymModel.getById(gymId)
 
             if (!gym) {
-                return res.status(500).json({
+                return res.status(404).json({
                     status: false,
-                    message: 'Error while retrieve gym'
+                    message: `Gym with id ${gymId} does not exists`
                 })
             }
 
@@ -153,6 +153,36 @@ module.exports = {
                 status: true,
                 data: gymUpdated,
                 message: 'Gym has been updated succesfully!'
+            })
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                status: false,
+                message: error
+            })
+        }
+    },
+    delete: async (req, res) => {
+        try {
+            const gymId = req.params.id
+            const gym = await gymModel.getById(gymId)
+
+            if (!gym) {
+                return res.status(404).json({
+                    status: false,
+                    message: `Gym with id ${gymId} does not exists`
+                })
+            }
+
+            const isDeleted = await gymModel.delete(gymId)
+            const statusCode = isDeleted ? 200 : 500
+            const msg = isDeleted
+                ? `Gym with id ${gymId} has been deleted`
+                : `An error ocurred while deleting gym with id ${gymId}`
+
+            return res.status(statusCode).json({
+                status: isDeleted,
+                message: msg
             })
         } catch (error) {
             console.log(error)

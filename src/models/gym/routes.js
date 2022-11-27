@@ -14,5 +14,10 @@ router.put('/:id', [
     middlewares.isOwnerOfGym
 ], gymController.update)
 router.get('/:id/users', gymController.getById)
+router.delete('/:id', [
+    middlewares.auth,
+    middlewares.isAdmin,
+    middlewares.isOwnerOfGym
+], gymController.delete)
 
 module.exports = router

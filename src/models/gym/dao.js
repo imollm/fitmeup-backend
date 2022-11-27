@@ -35,5 +35,9 @@ module.exports = {
     },
     getGymsByAdminId: async (adminId) => {
         return await gymCollection.find({ adminId })
+    },
+    delete: async (gymId) => {
+        const { acknowledged } = await gymCollection.deleteOne({ _id: gymId })
+        return acknowledged
     }
 }

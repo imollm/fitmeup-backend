@@ -24,7 +24,11 @@ module.exports = {
                 message: `All assigned gyms of admin with id ${adminId}`
             })
         } catch (error) {
-            
+            console.log(error)
+            return res.status(500).json({
+                status: false,
+                message: error
+            })
         }
     }
 }
