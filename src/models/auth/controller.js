@@ -90,6 +90,26 @@ module.exports = {
             })
         }
     },
+    confirmation: async (req, res) => {
+        try{
+            const email = req.params.email
+            const user = await userModel.getByEmail(email)
+            if(!user){
+                return res.status(404).json({
+                    message: "User not found"
+                })
+            }
+            user.isAccepted = true
+            await user.save()
+        }
+        catch(error) {
+            console.log(error)
+            return res.status(500).json({
+                status: false,
+                message: error
+            })
+        }
+    },
     me: (req, res) => {
         try {
             const { protocol, hostname, baseUrl, user } = req
