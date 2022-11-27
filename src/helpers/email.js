@@ -15,22 +15,27 @@ function createTransport(user, pass) {
     });
 }
 
-async function sendMail(user, pass, to, subject, body) {
+/**
+ * 
+ * @param {string} user 
+ * @param {string} pass 
+ * @param {{from?: string, to?: string, subject?: string, body?: string, html?: string}} options 
+ */
+async function sendMail(user, pass, options) {
     const transporter = createTransport(user, pass)
     try {
-        await transporter.sendMail({
-            from: process.env.SUPERADMIN_EMAIL,
-            to: to,
-            subject: subject,
-            text: body,
-        });
+        await transporter.sendMail(options);
     } catch (err) {
         console.log(err);
     }
 }
 
-async function superAdminSendMail(to, subject, body) {
-    sendMail(process.env.SUPERADMIN_EMAIL, process.env.SUPERADMIN_PASS, to, subject, body);
+/**
+ * 
+ * @param {{from?: string, to?: string, subject?: string, body?: string, html?: string}} options 
+ */
+async function superAdminSendMail(options) {
+    sendMail(process.env.SUPERADMIN_EMAIL, process.env.SUPERADMIN_PASS, options);
 }
 
 module.exports = { sendMail, superAdminSendMail };
