@@ -2,10 +2,12 @@
 
 const validator = require('./validator')
 const userModel = require('../user/model')
+const gymModel = require('../gym/model')
 const jwtModel = require('../auth/model')
 const helpers = require('../../helpers')
 const config = require('../../config')
 const Jwt = require('../../helpers/Jwt')
+const {superAdminSendMail} = require('../../helpers/email')
 
 module.exports = {
     register: async (req, res) => {
@@ -29,8 +31,30 @@ module.exports = {
             }
 
             userData.password = await helpers.encryptPass(userData.password)
-            const newUser = await userModel.create(userData)
             const { protocol, hostname, baseUrl } = req
+            
+            if(userData.role === 'user'){
+                userData.confirmationToken = await (new Jwt()).signConfirmationToken(userData);
+                const gym = await gymModel.getById(userData.gymId)
+                if(!gym) {
+                    return res.status(404).json({
+                        status: false,
+                        message: 'The gym you are trying to sign up for doesn\'t exist'
+                    })
+                }
+            
+                const admin = await gymModel.getAdmin(userData.gymId)
+                const confirmLocation = `${protocol}://${hostname}:${config.incomingPort}${baseUrl.slice(0, 7)}/auth/confirm/${userData.email}`
+                if(admin){
+                    superAdminSendMail({
+                        to: admin.email,
+                        subject: `New user ${userData.firstName} ${userData.lastName || ''}(${userData.email}) is trying to register to ${gym.name}`,
+                        html: `<a href="${confirmLocation}">Confirm user registration</a>`
+                    })
+                }
+            }
+
+            const newUser = await userModel.create(userData)
             const location = `${protocol}://${hostname}:${config.incomingPort}${baseUrl.slice(0, 7)}/user/${newUser.id}`
 
             return res
@@ -101,11 +125,16 @@ module.exports = {
             const user = await userModel.getByEmail(email)
             if(!user){
                 return res.status(404).json({
+                    status: false,
                     message: "User not found"
                 })
             }
             user.isAccepted = true
             await user.save()
+            return res.status(200).json({
+                status: true,
+                message: "User accepted"
+            })
         }
         catch(error) {
             console.log(error)

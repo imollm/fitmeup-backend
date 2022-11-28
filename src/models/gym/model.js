@@ -49,6 +49,11 @@ module.exports = {
     getUsers: (gymId) => {
         return userModel.getUsersByGymId(gymId)
     },
+    getAdmin: async (gymId) => {
+        const gym = await gymDAO.getById(gymId)
+        if(!gym) return null;
+        return userModel.getById(gym.adminId)
+    },
     getGymsByAdminId: async (adminId) => {
         const gyms = await gymDAO.getGymsByAdminId(adminId)
 
