@@ -11,5 +11,6 @@ module.exports = {
     refreshTokenExpTime:     String(parsed.REFRESH_TOKEN_EXP_TIME),
     bcryptSalt:              Number(parsed.BCRYPT_SALT),
     superAdminEmail:         parsed.SUPERADMIN_EMAIL,
-    superAdminPass:          bcrypt.hashSync(parsed.SUPERADMIN_PASS, bcrypt.genSaltSync(Number(parsed.BCRYPT_SALT)))
+    superAdminPass:          bcrypt.hashSync(parsed.SUPERADMIN_PASS, bcrypt.genSaltSync(Number(parsed.BCRYPT_SALT))),
+    limitBody:              parsed.API_LIMIT_CONTENT_LENGTH
 }

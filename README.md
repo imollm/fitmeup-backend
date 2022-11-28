@@ -115,6 +115,10 @@ about the gym they're attending to.
             <td>Password of super admin of the application</td>
         </tr>
         <tr>
+            <td>API_LIMIT_CONTENT_LENGTH</td>
+            <td>The limit of request body JSON, check Content-Length HTTP header</td>
+        </tr>
+        <tr>
             <td>CONFIRMATION_TOKEN_SECRET</td>
             <td>The same as TOKEN SECRET but for signing confirmation tokens</td>
         </tr>
@@ -155,6 +159,7 @@ REFRESH_TOKEN_EXP_TIME=
 BCRYPT_SALT=
 SUPERADMIN_EMAIL=
 SUPERADMIN_PASS=
+API_LIMIT_CONTENT_LENGTH=
 CONFIRMATION_TOKEN_SECRET=
 " > <project path>/.env
 ```
@@ -201,6 +206,7 @@ REFRESH_TOKEN_EXP_TIME=
 BCRYPT_SALT=
 SUPERADMIN_EMAIL=
 SUPERADMIN_PASS=
+API_LIMIT_CONTENT_LENGTH=
 CONFIRMATION_TOKEN_SECRET=
 " > <project path>/.env
 ```

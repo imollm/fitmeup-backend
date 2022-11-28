@@ -5,12 +5,14 @@ const express = require('express')
 const cors = require('cors')
 const jwt = require('jsonwebtoken')
 const Jwt = require('../helpers/Jwt')
+const config = require('../config')
+const gymModel = require('../models/gym/model')
 
 module.exports = {
     init: (app) => {
         app.use(bodyParser.urlencoded({ extended: false }))
         app.use(bodyParser.json())
-        app.use(express.json())
+        app.use(express.json({limit: config.limitBody}))
         app.use(cors({
             origin: '*',
             optionsSuccessStatus: 200
@@ -114,6 +116,65 @@ module.exports = {
             return res.status(400).json({
                 status: false,
                 message: 'Bad Request'
+            })
+        } catch (error) {
+            return res.status(500).json({
+                status: false,
+                message: error
+            })
+        }
+    },
+    isAdmin: (req, res, next) => {
+        try {
+            const hasAuthorizationHeader = req.headers.hasOwnProperty('authorization')
+            const authHeader = req.header('Authorization')
+            const accessToken = authHeader ? authHeader.split(' ')[1] : null
+
+            if (hasAuthorizationHeader && authHeader.indexOf('Bearer') !== -1) {
+                if (accessToken) {
+                    const JwtManager = new Jwt()
+    
+                    if (JwtManager.isAdmin(accessToken)) {
+                        return next()
+                    }
+    
+                    return res.status(401).json({
+                        status: false,
+                        message: 'You are not an admin'
+                    })
+                }
+            }
+        } catch (error) {
+            return res.status(500).json({
+                status: false,
+                message: error
+            })
+        }
+    },
+    isOwnerOfGym: async (req, res, next) => {
+        try {
+            const gymId = req.params.id
+            const accessToken = req.header('authorization').split(' ')[1]
+            
+            if (gymId && accessToken) {
+                const adminId = req.body.adminId
+                const JwtManager = new Jwt()
+                const tokenDecoded = JwtManager.decodeToken(accessToken)
+                const adminIdFromToken = tokenDecoded.id
+                const gym = await gymModel.getById(gymId)
+
+                if (gym.adminId === adminIdFromToken && req.method.toLowerCase() === 'delete') {
+                    return next()
+                }
+
+                if (gym.adminId === adminIdFromToken && gym.adminId === adminId) {
+                    return next()
+                }
+            }
+
+            return res.status(400).json({
+                status: false,
+                message: 'Check your request, you have some wrong info'
             })
         } catch (error) {
             return res.status(500).json({
