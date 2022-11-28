@@ -44,7 +44,7 @@ module.exports = {
                 }
             
                 const admin = await gymModel.getAdmin(userData.gymId)
-                const confirmLocation = `${protocol}://${hostname}:${config.incomingPort}${baseUrl.slice(0, 7)}/auth/confirm/${userData.email}`
+                const confirmLocation = `${protocol}://${hostname}:${config.incomingPort}${baseUrl.slice(0, 7)}/auth/confirm/${userData.confirmationToken}`
                 if(admin){
                     superAdminSendMail({
                         to: admin.email,
@@ -121,8 +121,8 @@ module.exports = {
     },
     confirmation: async (req, res) => {
         try{
-            const email = req.params.email
-            const user = await userModel.getByEmail(email)
+            const token = req.params.token
+            const user = await userModel.getByConfirmationToken(token)
             if(!user){
                 return res.status(404).json({
                     status: false,

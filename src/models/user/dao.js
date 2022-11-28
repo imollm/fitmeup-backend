@@ -12,6 +12,9 @@ module.exports = {
     getById: async (id) => {
         return await userCollection.findById(id)
     },
+    getByConfirmationToken: async (token) => {
+        return await userCollection.findOne({ confirmationToken: token })
+    },
     getUsersByGymId: async (gymId) => {
         return await userCollection.find({ gymId: gymId })
     }
