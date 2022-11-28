@@ -114,6 +114,10 @@ about the gym they're attending to.
             <td>SUPERADMIN_PASS</td>
             <td>Password of super admin of the application</td>
         </tr>
+        <tr>
+            <td>CONFIRMATION_TOKEN_SECRET</td>
+            <td>The same as TOKEN SECRET but for signing confirmation tokens</td>
+        </tr>
     </tbody>
 </table>
 
@@ -150,7 +154,9 @@ TOKEN_EXP_TIME=
 REFRESH_TOKEN_EXP_TIME=
 BCRYPT_SALT=
 SUPERADMIN_EMAIL=
-SUPERADMIN_PASS=" > <project path>/.env
+SUPERADMIN_PASS=
+CONFIRMATION_TOKEN_SECRET=
+" > <project path>/.env
 ```
 #### 2.2.2 Start
 1. Set up .env file
@@ -194,7 +200,9 @@ TOKEN_EXP_TIME=
 REFRESH_TOKEN_EXP_TIME=
 BCRYPT_SALT=
 SUPERADMIN_EMAIL=
-SUPERADMIN_PASS=" > <project path>/.env
+SUPERADMIN_PASS=
+CONFIRMATION_TOKEN_SECRET=
+" > <project path>/.env
 ```
 #### 2.3.2 Start
 1. Set up .env file

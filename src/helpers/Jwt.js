@@ -9,6 +9,7 @@ class Jwt {
         this.refreshTokenSecret = config.refreshTokenSecret
         this.accessTokenExpTime = config.tokenExpTime
         this.refreshTokenExpTime = config.refreshTokenExpTime
+        this.confirmationTokenSecret = config.confirmationTokenSecret
 
         if (typeof Jwt.instance === 'object') {
             return Jwt.instance
@@ -51,6 +52,13 @@ class Jwt {
             email: user.email,
             role: user.role,
         }, config.refreshTokenSecret, expirationTime)
+    }
+
+    signConfirmationToken(user) {
+        return jwt.sign({
+            email: user.email,
+            gymId: user.gymId
+        }, this.confirmationTokenSecret)
     }
     
     decodeToken(token) {

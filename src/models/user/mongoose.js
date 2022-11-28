@@ -32,6 +32,11 @@ const UserSchema = new Schema({
         type: Boolean,
         default: false
     },
+    confirmationToken: {
+        type: String,
+        required: true,
+        unique: true
+    },
     gymId: {
         type: String,
         required: true
