@@ -28,6 +28,10 @@ const UserSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    updatedAt: {
+        type: Date,
+        default: Date.now
+    },
     isAccepted: {
         type: Boolean,
         default: false

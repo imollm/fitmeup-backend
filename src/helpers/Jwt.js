@@ -34,7 +34,7 @@ class Jwt {
         const expirationTime = { expiresIn: config.tokenExpTime }
         
         return jwt.sign({
-            _id: user._id,
+            id: user._id,
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
@@ -47,7 +47,7 @@ class Jwt {
         const expirationTime = { expiresIn: config.refreshTokenExpTime }
     
         return jwt.sign({
-            _id: user._id,
+            id: user._id,
             email: user.email,
             role: user.role,
         }, config.refreshTokenSecret, expirationTime)
@@ -108,6 +108,16 @@ class Jwt {
             const tokenDecoded = this.decodeToken(accessToken)
             
             return tokenDecoded && tokenDecoded.hasOwnProperty('role') && tokenDecoded.role === 'superadmin'
+        } catch (error) {
+            return false
+        }
+    }
+
+    isAdmin(accessToken) {
+        try {
+            const tokenDecoded = this.decodeToken(accessToken)
+            
+            return tokenDecoded && tokenDecoded.hasOwnProperty('role') && tokenDecoded.role === 'admin'
         } catch (error) {
             return false
         }
