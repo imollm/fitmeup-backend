@@ -34,7 +34,7 @@ module.exports = {
             const { protocol, hostname, baseUrl } = req
             
             if(userData.role === 'user'){
-                userData.confirmationToken = await (new Jwt()).signConfirmationToken(userData);
+                const confirmationToken = await (new Jwt()).signConfirmationToken(userData);
                 const gym = await gymModel.getById(userData.gymId)
                 if(!gym) {
                     return res.status(404).json({
@@ -44,7 +44,7 @@ module.exports = {
                 }
             
                 const admin = await gymModel.getAdmin(userData.gymId)
-                const confirmLocation = `${protocol}://${hostname}:${config.incomingPort}${baseUrl.slice(0, 7)}/auth/confirm/${userData.confirmationToken}`
+                const confirmLocation = `${protocol}://${hostname}:${config.incomingPort}${baseUrl.slice(0, 7)}/auth/confirm/${confirmationToken}`
                 if(admin){
                     superAdminSendMail({
                         to: admin.email,
@@ -122,15 +122,18 @@ module.exports = {
     confirmation: async (req, res) => {
         try{
             const token = req.params.token
-            const user = await userModel.getByConfirmationToken(token)
+            const { email } = (new Jwt()).decodeToken(token)
+            const user = await userModel.getByEmail(email);
             if(!user){
                 return res.status(404).json({
                     status: false,
                     message: "User not found"
                 })
             }
-            user.isAccepted = true
-            await user.save()
+            if(!user.isAccepted){
+                user.isAccepted = true
+                await user.save()
+            }
             return res.status(200).json({
                 status: true,
                 message: "User accepted"

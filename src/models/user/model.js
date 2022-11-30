@@ -26,9 +26,6 @@ module.exports = {
     getById: (id) => {
         return userDAO.getById(id)
     },
-    getByConfirmationToken: async (token) => {
-        return await userDAO.getByConfirmationToken(token)
-    },
     getUsersByGymId: async (gymId) => {
         const users = await userDAO.getUsersByGymId(gymId)
 
