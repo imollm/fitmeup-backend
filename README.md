@@ -108,11 +108,12 @@ about the gym they're attending to.
         </tr>
         <tr>
             <td>SUPERADMIN_EMAIL</td>
-            <td>Email of super admin of the application</td>
+            <td>Email of super admin of the application, it must be a gmail account and have two step verification enabled</td>
         </tr>
         <tr>
             <td>SUPERADMIN_PASS</td>
-            <td>Password of super admin of the application</td>
+            <td>Password of super admin of the application, it must be an application password
+            gotten in https://myaccount.google.com/security after enabling two step verification</td>
         </tr>
         <tr>
             <td>API_LIMIT_CONTENT_LENGTH</td>
