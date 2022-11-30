@@ -11,6 +11,6 @@ router.use('/healthcheck', (_, res) => res.send('OK'))
 router.use('/auth', authRoutes)
 router.use('/gym', gymRoutes)
 router.use('/user', userRoutes)
-router.use('/comment', commentController)
+router.use('/comment', commentRoutes)
 
 module.exports = router
