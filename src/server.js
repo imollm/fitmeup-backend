@@ -6,6 +6,7 @@ const MongoDBClient = require('./db')
 const middlewares = require('./middlewares')
 const routes = require('./routes')
 const PORT = config.incomingPort
+const path = require('path')
 
 const app = express()
 
@@ -18,6 +19,7 @@ seedSuperAdmin()
 middlewares.init(app)
 
 app.use('/api/v1', routes)
+app.use(express.static(path.join(__dirname, 'public')))
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)

@@ -49,7 +49,9 @@ module.exports = {
                     superAdminSendMail({
                         to: admin.email,
                         subject: `New user ${userData.firstName} ${userData.lastName || ''}(${userData.email}) is trying to register to ${gym.name}`,
-                        html: `<a href="${confirmLocation}">Confirm user registration</a>`
+                        html: `
+                        <p>If you do not want to accept the user, ignore this email.</p>
+                        <a href="${confirmLocation}">Confirm user registration</a>`
                     })
                 }
             }
@@ -124,27 +126,20 @@ module.exports = {
             const token = req.params.token
             const { email } = (new Jwt()).decodeToken(token)
             const user = await userModel.getByEmail(email);
+            let status = 'Already registered';
             if(!user){
-                return res.status(404).json({
-                    status: false,
-                    message: "User not found"
-                })
+                status = 'Not found'
             }
-            if(!user.isAccepted){
+            else if(!user.isAccepted){
                 user.isAccepted = true
                 await user.save()
+                status = 'Accepted'
             }
-            return res.status(200).json({
-                status: true,
-                message: "User accepted"
-            })
+            return res.redirect(`/confirmation.html?email=${email}&status=${status}`)
         }
         catch(error) {
             console.log(error)
-            return res.status(500).json({
-                status: false,
-                message: error
-            })
+            return res.redirect(`/error.html`)
         }
     },
     me: (req, res) => {
