@@ -18,7 +18,7 @@ module.exports = {
         return comments.map(comment => {
             return {
                 _id: comment._id,
-                comment: data.comment,
+                comment: comment.comment,
                 createdAt: comment.createdAt,
                 userId: comment.userId,
                 gymId: comment.gymId
