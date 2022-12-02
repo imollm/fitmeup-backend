@@ -21,7 +21,7 @@ module.exports = {
                 comment: data.comment,
                 createdAt: comment.createdAt,
                 userId: comment.userId,
-                gymId: data.gymId
+                gymId: comment.gymId
             }
         })
     }
