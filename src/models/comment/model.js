@@ -15,7 +15,7 @@ module.exports = {
     },
     getComments: async (gymId) => {
         const comments = await commentDAO.getComments(gymId)
-        return result.map(data => {
+        return comments.map(comment => {
             return {
                 _id: data._id,
                 comment: data.comment,
