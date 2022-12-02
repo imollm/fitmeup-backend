@@ -20,7 +20,7 @@ module.exports = {
                 _id: comment._id,
                 comment: data.comment,
                 createdAt: comment.createdAt,
-                userId: data.userId,
+                userId: comment.userId,
                 gymId: data.gymId
             }
         })
