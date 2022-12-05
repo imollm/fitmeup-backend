@@ -17,6 +17,7 @@ jobs:
 
   staging:
     if: ${{ github.ref == 'develop' && github.event.pull_request.merged == true }}
+    needs: avoid_redundancy
     runs-on: ubuntu-latest
 
     steps:
