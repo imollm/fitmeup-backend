@@ -7,7 +7,7 @@ let envVars
 if (env === 'prod' || env === 'stg') {
     envVars = {
         mongoUrl:               process.env.MONGO_URL,
-        incomingPort:           process.env.API_INCOMING_PORT,
+        incomingPort:           process.env.PORT,
         tokenSecret:            process.env.TOKEN_SECRET,
         refreshTokenSecret:     process.env.REFRESH_TOKEN_SECRET,
         tokenExpTime:           String(process.env.TOKEN_EXP_TIME),
