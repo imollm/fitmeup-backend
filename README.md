@@ -108,15 +108,20 @@ about the gym they're attending to.
         </tr>
         <tr>
             <td>SUPERADMIN_EMAIL</td>
-            <td>Email of super admin of the application</td>
+            <td>Email of super admin of the application, it must be a gmail account and have two step verification enabled</td>
         </tr>
         <tr>
             <td>SUPERADMIN_PASS</td>
-            <td>Password of super admin of the application</td>
+            <td>Password of super admin of the application, it must be an application password
+            gotten in https://myaccount.google.com/security after enabling two step verification</td>
         </tr>
         <tr>
             <td>API_LIMIT_CONTENT_LENGTH</td>
             <td>The limit of request body JSON, check Content-Length HTTP header</td>
+        </tr>
+        <tr>
+            <td>CONFIRMATION_TOKEN_SECRET</td>
+            <td>The same as TOKEN SECRET but for signing confirmation tokens</td>
         </tr>
     </tbody>
 </table>
@@ -155,7 +160,9 @@ REFRESH_TOKEN_EXP_TIME=
 BCRYPT_SALT=
 SUPERADMIN_EMAIL=
 SUPERADMIN_PASS=
-API_LIMIT_CONTENT_LENGTH=" > <project path>/.env
+API_LIMIT_CONTENT_LENGTH=
+CONFIRMATION_TOKEN_SECRET=
+" > <project path>/.env
 ```
 #### 2.2.2 Start
 1. Set up .env file
@@ -200,7 +207,9 @@ REFRESH_TOKEN_EXP_TIME=
 BCRYPT_SALT=
 SUPERADMIN_EMAIL=
 SUPERADMIN_PASS=
-API_LIMIT_CONTENT_LENGTH=" > <project path>/.env
+API_LIMIT_CONTENT_LENGTH=
+CONFIRMATION_TOKEN_SECRET=
+" > <project path>/.env
 ```
 #### 2.3.2 Start
 1. Set up .env file
