@@ -2,10 +2,12 @@
 
 const validator = require('./validator')
 const userModel = require('../user/model')
+const gymModel = require('../gym/model')
 const jwtModel = require('../auth/model')
 const helpers = require('../../helpers')
 const config = require('../../config')
 const Jwt = require('../../helpers/Jwt')
+const {superAdminSendMail} = require('../../helpers/email')
 
 module.exports = {
     register: async (req, res) => {
@@ -29,8 +31,32 @@ module.exports = {
             }
 
             userData.password = await helpers.encryptPass(userData.password)
-            const newUser = await userModel.create(userData)
             const { protocol, hostname, baseUrl } = req
+            
+            if(userData.role === 'user'){
+                const confirmationToken = await (new Jwt()).signConfirmationToken(userData);
+                const gym = await gymModel.getById(userData.gymId)
+                if(!gym) {
+                    return res.status(404).json({
+                        status: false,
+                        message: 'The gym you are trying to sign up for doesn\'t exist'
+                    })
+                }
+            
+                const admin = await gymModel.getAdmin(userData.gymId)
+                const confirmLocation = `${protocol}://${hostname}:${config.incomingPort}${baseUrl.slice(0, 7)}/auth/confirm/${confirmationToken}`
+                if(admin){
+                    superAdminSendMail({
+                        to: admin.email,
+                        subject: `New user ${userData.firstName} ${userData.lastName || ''}(${userData.email}) is trying to register to ${gym.name}`,
+                        html: `
+                        <p>If you do not want to accept the user, ignore this email.</p>
+                        <a href="${confirmLocation}">Confirm user registration</a>`
+                    })
+                }
+            }
+
+            const newUser = await userModel.create(userData)
             const location = `${protocol}://${hostname}:${config.incomingPort}${baseUrl.slice(0, 7)}/user/${newUser.id}`
 
             return res
@@ -93,6 +119,27 @@ module.exports = {
                 status: false,
                 message: error
             })
+        }
+    },
+    confirmation: async (req, res) => {
+        try{
+            const token = req.params.token
+            const { email } = (new Jwt()).decodeToken(token)
+            const user = await userModel.getByEmail(email);
+            let status = 'Already registered';
+            if(!user){
+                status = 'Not found'
+            }
+            else if(!user.isAccepted){
+                user.isAccepted = true
+                await user.save()
+                status = 'Accepted'
+            }
+            return res.redirect(`/confirmation.html?email=${email}&status=${status}`)
+        }
+        catch(error) {
+            console.log(error)
+            return res.redirect(`/error.html`)
         }
     },
     me: (req, res) => {
