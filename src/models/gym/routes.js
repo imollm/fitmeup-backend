@@ -19,5 +19,7 @@ router.delete('/:id', [
     middlewares.isAdmin,
     middlewares.isOwnerOfGym
 ], gymController.delete)
+router.get('/:id/comments', middlewares.auth, gymController.getAllComments)
+router.post('/comments', middlewares.auth, gymController.createComment)
 
 module.exports = router

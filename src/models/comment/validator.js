@@ -3,7 +3,9 @@
 const Joi = require('joi')
 
 const schemaCreate = Joi.object({
-    comment: Joi.string().min(0).max(300).required()
+    comment: Joi.string().min(0).max(400).required(),
+    userId: Joi.string().required(),
+    gymId: Joi.string().required()
 })
 module.exports = {
     validateCreation: (commentData) => {
