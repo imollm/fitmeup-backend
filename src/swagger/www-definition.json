@@ -1,0 +1,1907 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Fitmeup API",
+        "description": "This is an API to manage gyms, users and comments.",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "schemes": [
+        "https"
+    ],
+    "host": "fitmeup.up.railway.app",
+    "basePath": "/api/v1",
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "Authorization"
+        }
+    },
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login",
+                "description": "Login endpoint for all kind of users",
+                "parameters": [
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "email",
+                        "description": "User email",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "password",
+                        "description": "User password",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "boolean"
+                                },
+                                "accessToken": {
+                                    "type": "string"
+                                },
+                                "refreshToken": {
+                                    "type": "string"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/BadRequest"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Bad credentials"
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/UnprocessableEntity"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Some credential is missed"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerError"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Message with specific error"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register user with his role.",
+                "description": "Endpoint to register admins and users. If you want to register a user with role admin you have to pass Super Admin access token. If you want to register a user with role user you don't have to pass any access token.",
+                "parameters": [
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "firstName",
+                        "description": "User first name",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "lastName",
+                        "description": "User last name",
+                        "type": "string",
+                        "required": false
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "email",
+                        "description": "User email",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "password",
+                        "description": "User password",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "role",
+                        "description": "User role, by default is user",
+                        "type": "string",
+                        "required": true,
+                        "enum": [
+                            "user",
+                            "admin"
+                        ]
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "gymId",
+                        "description": "Gym to associate",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/UserCreated"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": true,
+                                "data": {
+                                    "firstName": "User",
+                                    "lastName": "Test",
+                                    "email": "user@fitmeup.com",
+                                    "password": "12345678",
+                                    "role": "user",
+                                    "gymId": "637fed1df9b0e064771c28f8"
+                                },
+                                "message": "User has been created!"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/BadRequest"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Bad Request"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthoraized",
+                        "schema": {
+                            "$ref": "#/definitions/Unauthorized"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "You are not a superadmin"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/NotFound"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "The gym you are trying to sign up for doesn't exist"
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/Conflict"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "User already exists!"
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/UnprocessableEntity"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Some user data is wrong!"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerError"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Message with specific error"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/me": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get my info",
+                "description": "Endpoint to retrieve my information, You have to pass your generated access token",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/UserInfo"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": true,
+                                "data": {
+                                    "id": "639087cc52e75c8ad27d0df4",
+                                    "firstName": "User",
+                                    "lastName": "Test",
+                                    "email": "user@fitmeup.com",
+                                    "role": "user",
+                                    "createdAt": "2022-12-07T12:32:12.603Z"
+                                },
+                                "message": "You've got your personal data"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/BadRequest"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Invalid token"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthoraized",
+                        "schema": {
+                            "$ref": "#/definitions/Unauthorized"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Not authorized"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerError"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Message with specific error"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/refresh-token": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Refresh Access Token",
+                "description": "Endpoint to refresh access token, if it has expired.",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "grant_type",
+                        "value": "refresh_token",
+                        "description": "Grant type",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "refresh_token",
+                        "description": "Refresh token",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "boolean"
+                                },
+                                "accessToken": {
+                                    "type": "string"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "examples": {
+                            "status": true,
+                            "message": "Your access token has been refreshed",
+                            "accessToken": "<new_access_token_here>"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/BadRequest"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Invalid token"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthoraized",
+                        "schema": {
+                            "$ref": "#/definitions/Unauthorized"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Not authorized"
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/Conflict"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "There's a conflict with your refresh token"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerError"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Message with specific error"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/invalidate-token": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Invalidate Access Token",
+                "description": "Endpoint to invalidate access token.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "examples": {
+                            "status": true,
+                            "message": "Your token has been revoked"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/BadRequest"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Invalid token"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthoraized",
+                        "schema": {
+                            "$ref": "#/definitions/Unauthorized"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Not authorized"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerError"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Message with specific error"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout",
+                "description": "Endpoint to logout user.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "examples": {
+                            "status": true,
+                            "message": "Successfully logged out"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/BadRequest"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Invalid token"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthoraized",
+                        "schema": {
+                            "$ref": "#/definitions/Unauthorized"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Not authorized"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerError"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Message with specific error"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/confirm": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Confirm user by gym admin",
+                "description": "This endpoint is for register a new user to choosen gym.",
+                "parameters": [
+                    {
+                        "in": [
+                            "path"
+                        ],
+                        "name": "token",
+                        "description": "Token generated when user is registered",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "examples": {
+                            "status": true,
+                            "message": "Successfully logged out"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/BadRequest"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Invalid token"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthoraized",
+                        "schema": {
+                            "$ref": "#/definitions/Unauthorized"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Not authorized"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerError"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Message with specific error"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/gym": {
+            "post": {
+                "tags": [
+                    "Gym"
+                ],
+                "summary": "Create gym",
+                "description": "This endpoint is for register a new gym.",
+                "parameters": [
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "name",
+                        "description": "The name of the gym",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "email",
+                        "description": "The email of the gym",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "logoUrl",
+                        "description": "The logo of the gym. It must be a 64encoded image",
+                        "type": "string",
+                        "required": false
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "phone",
+                        "description": "The phone of the gym",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "openHours",
+                        "description": "The time table of the gym",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "description",
+                        "description": "The description of the gym",
+                        "type": "string",
+                        "required": false
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "active",
+                        "description": "If the gym is activated. By default is set it to false.",
+                        "type": "string",
+                        "required": false
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "location",
+                        "description": "The location of the gym must be an array of two positions. For example [lat, lng]. Latitude must be btw -90 and 90, and longitude btw -180 and 180",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        }
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "province",
+                        "description": "The province of the gym",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "address",
+                        "description": "The address of the gym",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "adminId",
+                        "description": "The id of the gym's owner (admin)",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/GymCreated"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": true,
+                                "data": {
+                                    "id": "639257e5fee02625212a932f",
+                                    "name": "Gym test",
+                                    "email": "gymtest10@fitmeup.com",
+                                    "logoUrl": "data:image/png;base64,....",
+                                    "phone": "12345678",
+                                    "openHours": "Lu-Vi 7:30h a 23:00h\nSa 9:30h a 14:30h / 16:00h. a 20:00h\nDo 10:00h- 14:00h",
+                                    "description": "Queremos tener un impacto real sobre la vida de millones de personas, ayudándoles a cuidar de su bienestar físico.",
+                                    "active": true,
+                                    "location": [
+                                        42.23467918479185,
+                                        -8.710717311486247
+                                    ],
+                                    "province": "Pontevedra",
+                                    "address": "Centro Comercial A Laxe, planta 2,  local 26",
+                                    "createdAt": "2022-12-08T21:32:21.888Z",
+                                    "updatedAt": "2022-12-08T21:32:21.888Z",
+                                    "adminId": "639257ddfee02625212a9326"
+                                },
+                                "message": "Gym has been created!"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/BadRequest"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "You are sending wrong admin id"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthoraized",
+                        "schema": {
+                            "$ref": "#/definitions/Unauthorized"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Not authorized"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/NotFound"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Admin user doesn't exists with id <adminId>"
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/Conflict"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Gym already exists!"
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/UnprocessableEntity"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "<validator_msg_here>"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerError"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Message with specific error"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Gym"
+                ],
+                "summary": "Get all gyms",
+                "description": "This endpoint is for retreive all gyms",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/AllGyms"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": true,
+                                "data": [
+                                    {
+                                        "id": "639257e5fee02625212a932f",
+                                        "name": "Gym test",
+                                        "email": "gymtest10@fitmeup.com",
+                                        "logoUrl": "data:image/png;base64,",
+                                        "phone": "12345678",
+                                        "openHours": "Lu-Vi 7:30h a 23:00h\nSa 9:30h a 14:30h / 16:00h. a 20:00h\nDo 10:00h- 14:00h",
+                                        "description": "Queremos tener un impacto real sobre la vida de millones de personas, ayudándoles a cuidar de su bienestar físico.",
+                                        "active": true,
+                                        "location": [
+                                            42.23467918479185,
+                                            -8.710717311486247
+                                        ],
+                                        "province": "Pontevedra",
+                                        "address": "Centro Comercial A Laxe, planta 2,  local 26",
+                                        "createdAt": "2022-12-08T21:32:21.888Z",
+                                        "updatedAt": "2022-12-08T21:32:21.888Z",
+                                        "adminId": "639257ddfee02625212a9326"
+                                    },
+                                    {
+                                        "id": "63925ed89cd089551505eede",
+                                        "name": "Gym test",
+                                        "email": "gymtest11@fitmeup.com",
+                                        "logoUrl": "data:image/png;base64,",
+                                        "phone": "12345678",
+                                        "openHours": "Lu-Vi 7:30h a 23:00h\nSa 9:30h a 14:30h / 16:00h. a 20:00h\nDo 10:00h- 14:00h",
+                                        "description": "Queremos tener un impacto real sobre la vida de millones de personas, ayudándoles a cuidar de su bienestar físico.",
+                                        "active": true,
+                                        "location": [
+                                            42.23467918479185,
+                                            -8.710717311486247
+                                        ],
+                                        "province": "Pontevedra",
+                                        "address": "Centro Comercial A Laxe, planta 2,  local 26",
+                                        "createdAt": "2022-12-08T22:02:00.269Z",
+                                        "updatedAt": "2022-12-08T22:02:00.269Z",
+                                        "adminId": "639257ddfee02625212a9326"
+                                    }
+                                ],
+                                "message": "You got all gyms!"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/gym/{gymId}": {
+            "get": {
+                "tags": [
+                    "Gym"
+                ],
+                "summary": "Get gym by its ID",
+                "description": "This endpoit is for retreive a gym by its ID",
+                "parameters": [
+                    {
+                        "name": "gymId",
+                        "in": "path",
+                        "description": "ID of gym to use",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/GymByID"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": true,
+                                "data": {
+                                    "id": "63925ed89cd089551505eede",
+                                    "name": "Gym test",
+                                    "email": "gymtest11@fitmeup.com",
+                                    "logoUrl": "data:image/png;base64,",
+                                    "phone": "12345678",
+                                    "openHours": "Lu-Vi 7:30h a 23:00h\nSa 9:30h a 14:30h / 16:00h. a 20:00h\nDo 10:00h- 14:00h",
+                                    "description": "Queremos tener un impacto real sobre la vida de millones de personas, ayudándoles a cuidar de su bienestar físico.",
+                                    "active": true,
+                                    "location": [
+                                        42.23467918479185,
+                                        -8.710717311486247
+                                    ],
+                                    "province": "Pontevedra",
+                                    "address": "Centro Comercial A Laxe, planta 2,  local 26",
+                                    "createdAt": "2022-12-08T22:02:00.269Z",
+                                    "updatedAt": "2022-12-08T22:02:00.269Z",
+                                    "adminId": "639257ddfee02625212a9326"
+                                },
+                                "message": "You got the requested gym"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/BadRequest"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "You have to send the id of gym"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/NotFound"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Gym with id <gymID> does not exists"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerError"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Message with specific error"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "Gym"
+                ],
+                "summary": "Update gym",
+                "description": "This endpoint is for update an existing gym. Just the owner of the gym can update it.",
+                "parameters": [
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "name",
+                        "description": "The name of the gym",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "email",
+                        "description": "The email of the gym",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "logoUrl",
+                        "description": "The logo of the gym. It must be a 64encoded image",
+                        "type": "string",
+                        "required": false
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "phone",
+                        "description": "The phone of the gym",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "openHours",
+                        "description": "The time table of the gym",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "description",
+                        "description": "The description of the gym",
+                        "type": "string",
+                        "required": false
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "active",
+                        "description": "If the gym is activated. By default is set it to false.",
+                        "type": "string",
+                        "required": false
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "location",
+                        "description": "The location of the gym must be an array of two positions. For example [lat, lng]. Latitude must be btw -90 and 90, and longitude btw -180 and 180",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        }
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "province",
+                        "description": "The province of the gym",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "address",
+                        "description": "The address of the gym",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": [
+                            "body"
+                        ],
+                        "name": "adminId",
+                        "description": "The id of the gym's owner (admin)",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/GymCreated"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": true,
+                                "data": {
+                                    "id": "639266cf701a92ca1060e197",
+                                    "name": "Gym test 123456",
+                                    "email": "gymtest@fitmeup.com",
+                                    "logoUrl": "data:image/png;base64,",
+                                    "phone": "12345678",
+                                    "openHours": "Lu-Vi 7:30h a 23:00h\nSa 9:30h a 14:30h / 16:00h. a 20:00h\nDo 10:00h- 14:00h",
+                                    "description": "Queremos tener un impacto real sobre la vida de millones de personas, ayudándoles a cuidar de su bienestar físico.",
+                                    "active": false,
+                                    "location": [
+                                        42.23467918479185,
+                                        -8.710717311486247
+                                    ],
+                                    "province": "Pontevedra",
+                                    "address": "Centro Comercial A Laxe, planta 2,  local 26",
+                                    "createdAt": "2022-12-08T22:35:59.044Z",
+                                    "updatedAt": "2022-12-08T22:36:43.608Z",
+                                    "adminId": "639257ddfee02625212a9326"
+                                },
+                                "message": "Gym has been updated succesfully!"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/BadRequest"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "<custom_msg_here>"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthoraized",
+                        "schema": {
+                            "$ref": "#/definitions/Unauthorized"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Not authorized"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/NotFound"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "The gym with given id doesn't exists"
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/UnprocessableEntity"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "<validator_msg_here>"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerError"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Message with specific error"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "Gym"
+                ],
+                "summary": "Delete a gym and its comments",
+                "description": "This endpoit deletes a gym and its coments. Just his owner can delete it.",
+                "parameters": [
+                    {
+                        "name": "gymId",
+                        "in": "path",
+                        "description": "ID of gym to use",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/GymByID"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": true,
+                                "data": {
+                                    "id": "63925ed89cd089551505eede",
+                                    "name": "Gym test",
+                                    "email": "gymtest11@fitmeup.com",
+                                    "logoUrl": "data:image/png;base64,",
+                                    "phone": "12345678",
+                                    "openHours": "Lu-Vi 7:30h a 23:00h\nSa 9:30h a 14:30h / 16:00h. a 20:00h\nDo 10:00h- 14:00h",
+                                    "description": "Queremos tener un impacto real sobre la vida de millones de personas, ayudándoles a cuidar de su bienestar físico.",
+                                    "active": true,
+                                    "location": [
+                                        42.23467918479185,
+                                        -8.710717311486247
+                                    ],
+                                    "province": "Pontevedra",
+                                    "address": "Centro Comercial A Laxe, planta 2,  local 26",
+                                    "createdAt": "2022-12-08T22:02:00.269Z",
+                                    "updatedAt": "2022-12-08T22:02:00.269Z",
+                                    "adminId": "639257ddfee02625212a9326"
+                                },
+                                "message": "You got the requested gym"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/BadRequest"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "You have to send the id of gym"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/NotFound"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Gym with id <gymID> does not exists"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerError"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Message with specific error"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/gym/{gymId}/users": {
+            "get": {
+                "tags": [
+                    "Gym"
+                ],
+                "summary": "Get all users of a gym",
+                "description": "This endpoint is for retreive a gym by its ID and all assigned users to it.",
+                "parameters": [
+                    {
+                        "name": "gymId",
+                        "in": "path",
+                        "description": "ID of gym to use",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "examples": {
+                            "status": true,
+                            "data": {
+                                "id": "639266cf701a92ca1060e197",
+                                "name": "Gym test 123456",
+                                "email": "gymtest@fitmeup.com",
+                                "logoUrl": "data:image/png;base64,",
+                                "phone": "12345678",
+                                "openHours": "Lu-Vi 7:30h a 23:00h\nSa 9:30h a 14:30h / 16:00h. a 20:00h\nDo 10:00h- 14:00h",
+                                "description": "Queremos tener un impacto real sobre la vida de millones de personas, ayudándoles a cuidar de su bienestar físico.",
+                                "active": false,
+                                "location": [
+                                    42.23467918479185,
+                                    -8.710717311486247
+                                ],
+                                "province": "Pontevedra",
+                                "address": "Centro Comercial A Laxe, planta 2,  local 26",
+                                "createdAt": "2022-12-08T22:35:59.044Z",
+                                "updatedAt": "2022-12-08T22:36:43.608Z",
+                                "adminId": "639257ddfee02625212a9326",
+                                "users": [
+                                    {
+                                        "id": "63926821adcfbe2c6d697878",
+                                        "firstName": "User",
+                                        "lastName": "Test",
+                                        "email": "user1@fitmeup.com",
+                                        "role": "user",
+                                        "isAccepted": false,
+                                        "createdAt": "2022-12-08T22:41:37.365Z",
+                                        "updatedAt": "2022-12-08T22:41:37.365Z"
+                                    },
+                                    {
+                                        "id": "63926826adcfbe2c6d69787e",
+                                        "firstName": "User",
+                                        "lastName": "Test",
+                                        "email": "user2@fitmeup.com",
+                                        "role": "user",
+                                        "isAccepted": false,
+                                        "createdAt": "2022-12-08T22:41:42.308Z",
+                                        "updatedAt": "2022-12-08T22:41:42.308Z"
+                                    }
+                                ]
+                            },
+                            "message": "You got the requested gym"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/BadRequest"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "You have to send the id of gym"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/NotFound"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Gym with id <gymID> does not exists"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerError"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Message with specific error"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{adminId}/gyms": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get all gyms of an admin",
+                "description": "This endpoint is for retreive all assigned gyms of an admin.",
+                "parameters": [
+                    {
+                        "name": "adminId",
+                        "in": "path",
+                        "description": "ID of admin to use",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "examples": {
+                            "application/json": {
+                                "status": true,
+                                "data": [
+                                    {
+                                        "id": "639257e5fee02625212a932f",
+                                        "name": "Gym test",
+                                        "email": "gymtest10@fitmeup.com",
+                                        "logoUrl": "data:image/png;base64",
+                                        "phone": "12345678",
+                                        "openHours": "Lu-Vi 7:30h a 23:00h\nSa 9:30h a 14:30h / 16:00h. a 20:00h\nDo 10:00h- 14:00h",
+                                        "description": "Queremos tener un impacto real sobre la vida de millones de personas, ayudándoles a cuidar de su bienestar físico.",
+                                        "active": true,
+                                        "location": [
+                                            42.23467918479185,
+                                            -8.710717311486247
+                                        ],
+                                        "province": "Pontevedra",
+                                        "address": "Centro Comercial A Laxe, planta 2,  local 26",
+                                        "createdAt": "2022-12-08T21:32:21.888Z",
+                                        "updatedAt": "2022-12-08T21:32:21.888Z",
+                                        "adminId": "639257ddfee02625212a9326"
+                                    },
+                                    {
+                                        "id": "63925ed89cd089551505eede",
+                                        "name": "Gym test",
+                                        "email": "gymtest11@fitmeup.com",
+                                        "logoUrl": "data:image/png;base64",
+                                        "phone": "12345678",
+                                        "openHours": "Lu-Vi 7:30h a 23:00h\nSa 9:30h a 14:30h / 16:00h. a 20:00h\nDo 10:00h- 14:00h",
+                                        "description": "Queremos tener un impacto real sobre la vida de millones de personas, ayudándoles a cuidar de su bienestar físico.",
+                                        "active": true,
+                                        "location": [
+                                            42.23467918479185,
+                                            -8.710717311486247
+                                        ],
+                                        "province": "Pontevedra",
+                                        "address": "Centro Comercial A Laxe, planta 2,  local 26",
+                                        "createdAt": "2022-12-08T22:02:00.269Z",
+                                        "updatedAt": "2022-12-08T22:02:00.269Z",
+                                        "adminId": "639257ddfee02625212a9326"
+                                    },
+                                    {
+                                        "id": "639266cf701a92ca1060e197",
+                                        "name": "Gym test 123456",
+                                        "email": "gymtest@fitmeup.com",
+                                        "logoUrl": "data:image/png;base64",
+                                        "phone": "12345678",
+                                        "openHours": "Lu-Vi 7:30h a 23:00h\nSa 9:30h a 14:30h / 16:00h. a 20:00h\nDo 10:00h- 14:00h",
+                                        "description": "Queremos tener un impacto real sobre la vida de millones de personas, ayudándoles a cuidar de su bienestar físico.",
+                                        "active": false,
+                                        "location": [
+                                            42.23467918479185,
+                                            -8.710717311486247
+                                        ],
+                                        "province": "Pontevedra",
+                                        "address": "Centro Comercial A Laxe, planta 2,  local 26",
+                                        "createdAt": "2022-12-08T22:35:59.044Z",
+                                        "updatedAt": "2022-12-08T22:36:43.608Z",
+                                        "adminId": "639257ddfee02625212a9326"
+                                    }
+                                ],
+                                "message": "All assigned gyms of admin with id 639257ddfee02625212a9326"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthoraized",
+                        "schema": {
+                            "$ref": "#/definitions/Unauthorized"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "You are not a superadmin"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/NotFound"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "User with id <adminId> not found"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerError"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Message with specific error"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Unauthorized": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean",
+                    "description": "Boolean to false indicating request has failed"
+                },
+                "message": {
+                    "type": "string",
+                    "description": "Custom message"
+                }
+            }
+        },
+        "Conflict": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean",
+                    "description": "Boolean to false indicating request has failed"
+                },
+                "message": {
+                    "type": "string",
+                    "description": "Custom message"
+                }
+            }
+        },
+        "UnprocessableEntity": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean",
+                    "description": "Boolean to false indicating request has failed"
+                },
+                "message": {
+                    "type": "string",
+                    "description": "Custom message"
+                }
+            }
+        },
+        "NotFound": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean",
+                    "description": "Boolean to false indicating request has failed"
+                },
+                "message": {
+                    "type": "string",
+                    "description": "Custom message"
+                }
+            }
+        },
+        "BadRequest": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean",
+                    "description": "Boolean to false indicating request has failed"
+                },
+                "message": {
+                    "type": "string",
+                    "description": "Custom message"
+                }
+            }
+        },
+        "InternalServerError": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean",
+                    "description": "Boolean to false indicating request has failed"
+                },
+                "message": {
+                    "type": "string",
+                    "description": "Custom message"
+                }
+            }
+        },
+        "UserCreated": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean"
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "firstName": {
+                            "type": "string"
+                        },
+                        "lastName": {
+                            "type": "string"
+                        },
+                        "email": {
+                            "type": "string"
+                        },
+                        "role": {
+                            "type": "string"
+                        },
+                        "gymId": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "UserInfo": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean"
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "firstName": {
+                            "type": "string"
+                        },
+                        "lastName": {
+                            "type": "string"
+                        },
+                        "email": {
+                            "type": "string"
+                        },
+                        "role": {
+                            "type": "string"
+                        },
+                        "createdAt": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "GymCreated": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean"
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "email": {
+                            "type": "string"
+                        },
+                        "logoUrl": {
+                            "type": "string"
+                        },
+                        "phone": {
+                            "type": "string"
+                        },
+                        "openHours": {
+                            "type": "string"
+                        },
+                        "description": {
+                            "type": "string"
+                        },
+                        "active": {
+                            "type": "boolean"
+                        },
+                        "location": {
+                            "type": "array"
+                        },
+                        "province": {
+                            "type": "string"
+                        },
+                        "address": {
+                            "type": "string"
+                        },
+                        "createdAt": {
+                            "type": "string"
+                        },
+                        "updatedAt": {
+                            "type": "string"
+                        },
+                        "adminId": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "AllGyms": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "email": {
+                                "type": "string"
+                            },
+                            "logoUrl": {
+                                "type": "string"
+                            },
+                            "phone": {
+                                "type": "string"
+                            },
+                            "openHours": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "active": {
+                                "type": "boolean"
+                            },
+                            "location": {
+                                "type": "array"
+                            },
+                            "province": {
+                                "type": "string"
+                            },
+                            "address": {
+                                "type": "string"
+                            },
+                            "createdAt": {
+                                "type": "string"
+                            },
+                            "updatedAt": {
+                                "type": "string"
+                            },
+                            "adminId": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "GymByID": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean"
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "email": {
+                            "type": "string"
+                        },
+                        "logoUrl": {
+                            "type": "string"
+                        },
+                        "phone": {
+                            "type": "string"
+                        },
+                        "openHours": {
+                            "type": "string"
+                        },
+                        "description": {
+                            "type": "string"
+                        },
+                        "active": {
+                            "type": "boolean"
+                        },
+                        "location": {
+                            "type": "array"
+                        },
+                        "province": {
+                            "type": "string"
+                        },
+                        "address": {
+                            "type": "string"
+                        },
+                        "createdAt": {
+                            "type": "string"
+                        },
+                        "updatedAt": {
+                            "type": "string"
+                        },
+                        "adminId": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

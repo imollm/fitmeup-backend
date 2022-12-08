@@ -244,10 +244,10 @@ module.exports = {
         try {
             const JwtManager = new Jwt()
             const accessToken = req.header('Authorization').split(' ')[1]
-            const { _id } = JwtManager.decodeToken(accessToken)
+            const { id } = JwtManager.decodeToken(accessToken)
 
-            JwtManager.invalidateAllAccessTokens(_id)
-            JwtManager.invalidateAllRefreshTokens(_id)
+            JwtManager.invalidateAllAccessTokens(id)
+            JwtManager.invalidateAllRefreshTokens(id)
 
             return res.status(200).json({
                 status: true,

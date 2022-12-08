@@ -5,6 +5,7 @@ const config = require('./config')
 const MongoDBClient = require('./db')
 const middlewares = require('./middlewares')
 const routes = require('./routes')
+const swagger = require('./swagger')
 const PORT = config.incomingPort
 const path = require('path')
 
@@ -17,6 +18,7 @@ connect()
 seedSuperAdmin()
 
 middlewares.init(app)
+swagger.init(app)
 
 app.use('/api/v1', routes)
 app.use(express.static(path.join(__dirname, 'public')))
