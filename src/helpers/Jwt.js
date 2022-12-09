@@ -130,6 +130,16 @@ class Jwt {
             return false
         }
     }
+
+    isUser(accessToken) {
+        try {
+            const tokenDecoded = this.decodeToken(accessToken)
+            
+            return tokenDecoded && tokenDecoded.hasOwnProperty('role') && tokenDecoded.role === 'user'
+        } catch (error) {
+            return false
+        }
+    }
 }
 
 module.exports = Jwt
