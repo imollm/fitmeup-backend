@@ -5,6 +5,7 @@ const gymModel = require('./model')
 const userModel = require('../user/model')
 const commentModel = require('../comment/model')
 const validatorComment = require('../comment/validator')
+const JwtManager = require('../../helpers/Jwt')
 
 module.exports = {
     create: async (req, res) => {
@@ -214,6 +215,8 @@ module.exports = {
     createComment: async (req, res) => {
         try {
             const comment = req.body
+            const user = req.user
+            const { gymId } = await userModel.getById(user.id)
       
             if (validatorComment.validateCreation(comment)) {
                 return res.status(422).json({
@@ -221,25 +224,15 @@ module.exports = {
                     message: 'Some comment data is wrong!'
                 })
             }
-      
-            const JwtManager = new Jwt()
-            const accessToken = req.header('Authorization').split(' ')[1]
-            const tokenDecoded = JwtManager.decodeToken(accessToken)
-            if (tokenDecoded.role === 'admin') {
-              return res.status(403).json({
-                status: false,
-                message: 'As a gym administrator you cannot create comments!'
-              })
-            }
-      
-            const user = await userModel.getByEmail(tokenDecoded.email)
-            if (user.gymId !== gymId) {
+
+            if (gymId !== comment.gymId) {
                 return res.status(403).json({
                     status: false,
                     message: 'You cannot add a comment in a gym where you are not registered!'
                 })
             }
       
+            comment.userId = user.id
             const newComment = await commentModel.create(comment)
             return res.status(201).json({
                 status: true,
