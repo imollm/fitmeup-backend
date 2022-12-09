@@ -3,7 +3,7 @@
 const Joi = require('joi')
 
 const schemaCreate = Joi.object({
-    comment: Joi.string().min(0).max(400).required(),
+    comment: Joi.string().empty().max(400).required(),
     gymId: Joi.string().required()
 })
 module.exports = {
