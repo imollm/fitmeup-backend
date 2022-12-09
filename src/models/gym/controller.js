@@ -3,6 +3,9 @@
 const validator = require('./validator')
 const gymModel = require('./model')
 const userModel = require('../user/model')
+const commentModel = require('../comment/model')
+const validatorComment = require('../comment/validator')
+const JwtManager = require('../../helpers/Jwt')
 
 module.exports = {
     create: async (req, res) => {
@@ -181,7 +184,7 @@ module.exports = {
                 : `An error ocurred while deleting gym with id ${gymId}`
 
             return res.status(statusCode).json({
-                status: isDeleted,
+                status: statusCode === 200,
                 message: msg
             })
         } catch (error) {
@@ -191,5 +194,57 @@ module.exports = {
                 message: error
             })
         }
-    }
+    },
+    getAllComments: async (req, res) => {
+        try {
+            const gymId = req.params.id
+        
+            const comments = await commentModel.getComments(gymId)
+            return res.status(200).json({
+                status: true,
+                data: comments,
+                message: 'Comments from gym'
+            })
+        } catch (error) {
+            return res.status(500).json({
+                status: false,
+                message: error
+            })
+        }
+    },
+    createComment: async (req, res) => {
+        try {
+            const comment = req.body
+            const user = req.user
+            const { gymId } = await userModel.getById(user.id)
+      
+            if (validatorComment.validateCreation(comment)) {
+                return res.status(422).json({
+                    status: false,
+                    message: 'Some comment data is wrong!'
+                })
+            }
+
+            if (gymId !== comment.gymId) {
+                return res.status(403).json({
+                    status: false,
+                    message: 'You cannot add a comment in a gym where you are not registered!'
+                })
+            }
+      
+            comment.userId = user.id
+            const newComment = await commentModel.create(comment)
+            return res.status(201).json({
+                status: true,
+                data: newComment,
+                message: 'Comment has been created!'
+            })
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                status: false,
+                message: error
+            })
+        }
+    },
 }

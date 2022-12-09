@@ -138,9 +138,36 @@ module.exports = {
                         return next()
                     }
     
-                    return res.status(401).json({
+                    return res.status(403).json({
                         status: false,
                         message: 'You are not an admin'
+                    })
+                }
+            }
+        } catch (error) {
+            return res.status(500).json({
+                status: false,
+                message: error
+            })
+        }
+    },
+    isUser: (req, res, next) => {
+        try {
+            const hasAuthorizationHeader = req.headers.hasOwnProperty('authorization')
+            const authHeader = req.header('Authorization')
+            const accessToken = authHeader ? authHeader.split(' ')[1] : null
+
+            if (hasAuthorizationHeader && authHeader.indexOf('Bearer') !== -1) {
+                if (accessToken) {
+                    const JwtManager = new Jwt()
+    
+                    if (JwtManager.isUser(accessToken)) {
+                        return next()
+                    }
+    
+                    return res.status(403).json({
+                        status: false,
+                        message: 'You are not a user, then you cannot post a comment.'
                     })
                 }
             }
