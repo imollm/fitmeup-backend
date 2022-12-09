@@ -36,42 +36,37 @@
                 "description": "Login endpoint for all kind of users",
                 "parameters": [
                     {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "email",
-                        "description": "User email",
-                        "type": "string",
-                        "required": true
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "password",
-                        "description": "User password",
-                        "type": "string",
-                        "required": true
+                        "name": "user credentials",
+                        "in": "body",
+                        "description": "User credentials to log in to the system.",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "email": {
+                                    "type": "string"
+                                },
+                                "password": {
+                                    "type": "string"
+                                }
+                            },
+                            "example": {
+                                "email": "user@fitmeup.com",
+                                "password": "12345678"
+                            }
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "status": {
-                                    "type": "boolean"
-                                },
-                                "accessToken": {
-                                    "type": "string"
-                                },
-                                "refreshToken": {
-                                    "type": "string"
-                                },
-                                "message": {
-                                    "type": "string"
-                                }
+                        "schema": "#/definitions/UserAuth",
+                        "examples": {
+                            "application/json": {
+                                "status": true,
+                                "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOTI3MWIwZWM5ZGZiMDRjODY0YWVkMCIsImZpcnN0TmFtZSI6IlVzZXIiLCJsYXN0TmFtZSI6IlRlc3QiLCJlbWFpbCI6InVzZXJAZml0bWV1cC5jb20iLCJyb2xlIjoidXNlciIsImNyZWF0ZWRBdCI6IjIwMjItMTItMDhUMjM6MjI6MjQuMjk2WiIsImlhdCI6MTY3MDU3MzEyMCwiZXhwIjoxNjcwNTc2NzIwfQ.OMXgdB3EXoONbXPNQCMI9livlnjY7rS0SK2tlr9EGUw",
+                                "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOTI3MWIwZWM5ZGZiMDRjODY0YWVkMCIsImVtYWlsIjoidXNlckBmaXRtZXVwLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNjcwNTczMTIwLCJleHAiOjE2NzA2NTk1MjB9.MwPp8HLliRN0DrG0qGA-xZyPpW1JNF3dldlmiYissuQ",
+                                "message": "You're successfully logged!"
                             }
                         }
                     },
@@ -128,62 +123,47 @@
                 "description": "Endpoint to register admins and users. If you want to register a user with role admin you have to pass Super Admin access token. If you want to register a user with role user you don't have to pass any access token.",
                 "parameters": [
                     {
-                        "in": [
-                            "body"
+                        "name": "user info",
+                        "in": "body",
+                        "description": "User info to register into the system.",
+                        "required": [
+                            "firstName",
+                            "email",
+                            "password",
+                            "role",
+                            "gymId"
                         ],
-                        "name": "firstName",
-                        "description": "User first name",
-                        "type": "string",
-                        "required": true
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "lastName",
-                        "description": "User last name",
-                        "type": "string",
-                        "required": false
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "email",
-                        "description": "User email",
-                        "type": "string",
-                        "required": true
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "password",
-                        "description": "User password",
-                        "type": "string",
-                        "required": true
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "role",
-                        "description": "User role, by default is user",
-                        "type": "string",
-                        "required": true,
-                        "enum": [
-                            "user",
-                            "admin"
-                        ]
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "gymId",
-                        "description": "Gym to associate",
-                        "type": "string",
-                        "required": true
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "firstName": {
+                                    "type": "string"
+                                },
+                                "lastName": {
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "type": "string"
+                                },
+                                "password": {
+                                    "type": "string"
+                                },
+                                "role": {
+                                    "type": "string"
+                                },
+                                "gymId": {
+                                    "type": "string"
+                                }
+                            },
+                            "example": {
+                                "firstName": "User",
+                                "lastName": "Test",
+                                "email": "user@fitmeup.com",
+                                "password": "12345678",
+                                "role": "user",
+                                "gymId": "639266cf701a92ca1060e197"
+                            }
+                        }
                     }
                 ],
                 "responses": {
@@ -682,115 +662,82 @@
         },
         "/gym": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "tags": [
                     "Gym"
                 ],
                 "summary": "Create gym",
-                "description": "This endpoint is for register a new gym.",
+                "description": "This endpoint is for register a new gym. User must be an admin.",
                 "parameters": [
                     {
-                        "in": [
-                            "body"
+                        "name": "user info",
+                        "in": "body",
+                        "description": "This endpoint is for register a new gym.",
+                        "required": [
+                            "firstName",
+                            "email",
+                            "password",
+                            "role",
+                            "gymId"
                         ],
-                        "name": "name",
-                        "description": "The name of the gym",
-                        "type": "string",
-                        "required": true
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "email",
-                        "description": "The email of the gym",
-                        "type": "string",
-                        "required": true
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "logoUrl",
-                        "description": "The logo of the gym. It must be a 64encoded image",
-                        "type": "string",
-                        "required": false
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "phone",
-                        "description": "The phone of the gym",
-                        "type": "string",
-                        "required": true
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "openHours",
-                        "description": "The time table of the gym",
-                        "type": "string",
-                        "required": true
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "description",
-                        "description": "The description of the gym",
-                        "type": "string",
-                        "required": false
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "active",
-                        "description": "If the gym is activated. By default is set it to false.",
-                        "type": "string",
-                        "required": false
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "location",
-                        "description": "The location of the gym must be an array of two positions. For example [lat, lng]. Latitude must be btw -90 and 90, and longitude btw -180 and 180",
-                        "required": false,
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "number"
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "type": "string"
+                                },
+                                "logoUrl": {
+                                    "type": "string"
+                                },
+                                "phone": {
+                                    "type": "string"
+                                },
+                                "openHours": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "active": {
+                                    "type": "boolean"
+                                },
+                                "location": {
+                                    "type": "array"
+                                },
+                                "province": {
+                                    "type": "string"
+                                },
+                                "address": {
+                                    "type": "string"
+                                },
+                                "adminId": {
+                                    "type": "string"
+                                }
+                            },
+                            "example": {
+                                "name": "Gym test",
+                                "email": "gymtest@fitmeup.com",
+                                "logoUrl": "data:image/png;base64,....",
+                                "phone": "12345678",
+                                "openHours": "Lu-Vi 7:30h a 23:00h\nSa 9:30h a 14:30h / 16:00h. a 20:00h\nDo 10:00h- 14:00h",
+                                "description": "Queremos tener un impacto real sobre la vida de millones de personas, ayudándoles a cuidar de su bienestar físico.",
+                                "active": true,
+                                "location": [
+                                    42.23467918479185,
+                                    -8.710717311486247
+                                ],
+                                "province": "Pontevedra",
+                                "address": "Centro Comercial A Laxe, planta 2,  local 26",
+                                "adminId": "639257ddfee02625212a9326"
                             }
                         }
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "province",
-                        "description": "The province of the gym",
-                        "type": "string",
-                        "required": true
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "address",
-                        "description": "The address of the gym",
-                        "type": "string",
-                        "required": true
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "adminId",
-                        "description": "The id of the gym's owner (admin)",
-                        "type": "string",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -1060,108 +1007,70 @@
                 "description": "This endpoint is for update an existing gym. Just the owner of the gym can update it.",
                 "parameters": [
                     {
-                        "in": [
-                            "body"
+                        "name": "user info",
+                        "in": "body",
+                        "description": "This endpoint is for update a gym.",
+                        "required": [
+                            "firstName",
+                            "email",
+                            "password",
+                            "role",
+                            "gymId"
                         ],
-                        "name": "name",
-                        "description": "The name of the gym",
-                        "type": "string",
-                        "required": true
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "email",
-                        "description": "The email of the gym",
-                        "type": "string",
-                        "required": true
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "logoUrl",
-                        "description": "The logo of the gym. It must be a 64encoded image",
-                        "type": "string",
-                        "required": false
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "phone",
-                        "description": "The phone of the gym",
-                        "type": "string",
-                        "required": true
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "openHours",
-                        "description": "The time table of the gym",
-                        "type": "string",
-                        "required": true
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "description",
-                        "description": "The description of the gym",
-                        "type": "string",
-                        "required": false
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "active",
-                        "description": "If the gym is activated. By default is set it to false.",
-                        "type": "string",
-                        "required": false
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "location",
-                        "description": "The location of the gym must be an array of two positions. For example [lat, lng]. Latitude must be btw -90 and 90, and longitude btw -180 and 180",
-                        "required": false,
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "number"
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "type": "string"
+                                },
+                                "logoUrl": {
+                                    "type": "string"
+                                },
+                                "phone": {
+                                    "type": "string"
+                                },
+                                "openHours": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "active": {
+                                    "type": "boolean"
+                                },
+                                "location": {
+                                    "type": "array"
+                                },
+                                "province": {
+                                    "type": "string"
+                                },
+                                "address": {
+                                    "type": "string"
+                                },
+                                "adminId": {
+                                    "type": "string"
+                                }
+                            },
+                            "example": {
+                                "name": "Gym test",
+                                "email": "gymtest@fitmeup.com",
+                                "logoUrl": "data:image/png;base64,....",
+                                "phone": "12345678",
+                                "openHours": "Lu-Vi 7:30h a 23:00h\nSa 9:30h a 14:30h / 16:00h. a 20:00h\nDo 10:00h- 14:00h",
+                                "description": "Queremos tener un impacto real sobre la vida de millones de personas, ayudándoles a cuidar de su bienestar físico.",
+                                "active": true,
+                                "location": [
+                                    42.23467918479185,
+                                    -8.710717311486247
+                                ],
+                                "province": "Pontevedra",
+                                "address": "Centro Comercial A Laxe, planta 2,  local 26",
+                                "adminId": "639257ddfee02625212a9326"
                             }
                         }
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "province",
-                        "description": "The province of the gym",
-                        "type": "string",
-                        "required": true
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "address",
-                        "description": "The address of the gym",
-                        "type": "string",
-                        "required": true
-                    },
-                    {
-                        "in": [
-                            "body"
-                        ],
-                        "name": "adminId",
-                        "description": "The id of the gym's owner (admin)",
-                        "type": "string",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -1838,6 +1747,23 @@
                             }
                         }
                     }
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "UserAuth": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean"
+                },
+                "accessToken": {
+                    "type": "string"
+                },
+                "refreshToken": {
+                    "type": "string"
                 },
                 "message": {
                     "type": "string"
