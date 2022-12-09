@@ -16,7 +16,7 @@ if (env === 'prod' || env === 'stg') {
         superAdminEmail:        process.env.SUPERADMIN_EMAIL,
         superAdminPass:         bcrypt.hashSync(process.env.SUPERADMIN_PASS, bcrypt.genSaltSync(Number(process.env.BCRYPT_SALT))),
         limitBody:              process.env.API_LIMIT_CONTENT_LENGTH,
-        confirmationTokenSecret: parsed.CONFIRMATION_TOKEN_SECRET
+        confirmationTokenSecret: process.env.CONFIRMATION_TOKEN_SECRET
     }
 } else {
     const { parsed } = require('dotenv').config()
