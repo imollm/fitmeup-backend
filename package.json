@@ -5,7 +5,7 @@
     "main": "server.js",
     "scripts": {
         "start:prod": "NODE_ENV=prod node src/server.js",
-        "start:stg": "NODE_ENV=stg node src/server.js", 
+        "start:stg": "NODE_ENV=stg node src/server.js",
         "dev": "node --watch src/server.js",
         "test": "NODE_ENV=test jest --verbose --silent --detectOpenHandles",
         "debug": "NODE_ENV=debug node --watch --inspect=0.0.0.0 src/server.js"
@@ -22,7 +22,8 @@
         "joi": "^17.7.0",
         "jsonwebtoken": "8.5.1",
         "mongoose": "6.7.0",
-        "nodemailer": "^6.8.0"
+        "nodemailer": "^6.8.0",
+        "swagger-ui-express": "^4.6.0"
     },
     "devDependencies": {
         "jest": "29.2.2",
