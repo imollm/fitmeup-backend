@@ -24,7 +24,8 @@
         "ApiKeyAuth": {
             "type": "apiKey",
             "in": "header",
-            "name": "Authorization"
+            "name": "Authorization",
+            "description": "⚠️⚠️⚠️ The value must have this structure \"Bearer <here_access_token>\" ⚠️⚠️⚠️"
         }
     },
     "paths": {
@@ -34,7 +35,7 @@
                     "Auth"
                 ],
                 "summary": "Login",
-                "description": "Login endpoint for all kind of users",
+                "description": "Login endpoint for all kind of users [admin, superadmin, user]",
                 "parameters": [
                     {
                         "name": "user credentials",
@@ -797,6 +798,18 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Forbidden"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "You are not an admin"
+                            }
+                        }
+                    },
                     "404": {
                         "description": "Not Found",
                         "schema": {
@@ -1130,6 +1143,18 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Forbidden"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "You are not an admin"
+                            }
+                        }
+                    },
                     "404": {
                         "description": "Not Found",
                         "schema": {
@@ -1229,6 +1254,30 @@
                             "application/json": {
                                 "status": false,
                                 "message": "You have to send the id of gym"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthoraized",
+                        "schema": {
+                            "$ref": "#/definitions/Unauthorized"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Not authorized"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Forbidden"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "You are not an admin"
                             }
                         }
                     },
@@ -1362,6 +1411,252 @@
                 }
             }
         },
+        "/gym/comment": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "Gym"
+                ],
+                "summary": "Create a comment of gym",
+                "description": "This endpoint is for post a comment about a gym. Just a user can post comments about his gym.",
+                "parameters": [
+                    {
+                        "name": "comment",
+                        "in": "body",
+                        "description": "This endpoint is for post a comment about a gym. Just a user can post comments about his gym.",
+                        "required": [
+                            "comment",
+                            "gymId"
+                        ],
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "comment": {
+                                    "type": "string"
+                                },
+                                "gymId": {
+                                    "type": "string"
+                                }
+                            },
+                            "example": {
+                                "comment": "Here goes the comment",
+                                "gymId": "639257ddfee02625212a9326"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/GymCreated"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": true,
+                                "data": {
+                                    "id": "63931a88a05cde3b94c55f7c",
+                                    "comment": "Here goes the comment",
+                                    "createdAt": "2022-12-09T11:22:48.801Z",
+                                    "userId": "63931a7ea05cde3b94c55f73",
+                                    "gymId": "63931a79a05cde3b94c55f6d"
+                                },
+                                "message": "Comment has been created!"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/BadRequest"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Invalid header"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthoraized",
+                        "schema": {
+                            "$ref": "#/definitions/Unauthorized"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Not authorized"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Forbidden"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "You are not a user, then you cannot post a comment."
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/NotFound"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "The gym with id <gymId> does not exists"
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/UnprocessableEntity"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Some comment data is wrong!"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerError"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Message with specific error"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/gym/{gymId}/comments": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "Gym"
+                ],
+                "summary": "Get all comments of gym.",
+                "description": "This endpoit is for retreive all comments from a gym by gymId. Just the admin of the gym can get all comments of his gym.",
+                "parameters": [
+                    {
+                        "name": "gymId",
+                        "in": "path",
+                        "description": "ID of gym to use",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/GymComments"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": true,
+                                "data": [
+                                    {
+                                        "id": "63931a88a05cde3b94c55f7c",
+                                        "comment": "Here goes the comment 1",
+                                        "createdAt": "2022-12-09T11:22:48.801Z",
+                                        "userId": "63931a7ea05cde3b94c55f73",
+                                        "gymId": "63931a79a05cde3b94c55f6d"
+                                    },
+                                    {
+                                        "id": "63931a88a05cde3b94c55f7d",
+                                        "comment": "Here goes the comment 2",
+                                        "createdAt": "2022-12-09T11:22:50.801Z",
+                                        "userId": "63931a7ea05cde3b94c55f74",
+                                        "gymId": "63931a79a05cde3b94c55f6d"
+                                    }
+                                ],
+                                "message": "Comments from gym <gymId>"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/BadRequest"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Invalid header"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthoraized",
+                        "schema": {
+                            "$ref": "#/definitions/Unauthorized"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Not authorized"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Forbidden"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "You are not a user, then you cannot post a comment."
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/NotFound"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Gym with id <gymID> does not exists"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerError"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "Message with specific error"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user/{adminId}/gyms": {
             "get": {
                 "security": [
@@ -1459,7 +1754,19 @@
                         "examples": {
                             "application/json": {
                                 "status": false,
-                                "message": "You are not a superadmin"
+                                "message": "Not authorized"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Forbidden"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": false,
+                                "message": "You are not an admin"
                             }
                         }
                     },
@@ -1519,6 +1826,19 @@
             }
         },
         "UnprocessableEntity": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean",
+                    "description": "Boolean to false indicating request has failed"
+                },
+                "message": {
+                    "type": "string",
+                    "description": "Custom message"
+                }
+            }
+        },
+        "Forbidden": {
             "type": "object",
             "properties": {
                 "status": {
@@ -1825,6 +2145,43 @@
                     }
                 },
                 "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "GymComments": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean"
+                },
+                "data": {
+                    "type": "array",
+                    "schema": {
+                        "$ref": "#/definitions/GymComment"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "GymComment": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "string"
+                },
+                "gymId": {
                     "type": "string"
                 }
             }

@@ -5,7 +5,6 @@ const gymModel = require('./model')
 const userModel = require('../user/model')
 const commentModel = require('../comment/model')
 const validatorComment = require('../comment/validator')
-const JwtManager = require('../../helpers/Jwt')
 
 module.exports = {
     create: async (req, res) => {
@@ -198,12 +197,20 @@ module.exports = {
     getAllComments: async (req, res) => {
         try {
             const gymId = req.params.id
+            const gym = await gymModel.getById(gymId)
+
+            if (!gym) {
+                return res.status(404).json({
+                    stauts: false,
+                    message: `Gym with id ${gymId} does not exists`
+                })
+            }
         
             const comments = await commentModel.getComments(gymId)
             return res.status(200).json({
                 status: true,
                 data: comments,
-                message: 'Comments from gym'
+                message: `Comments from gym ${gymId}`
             })
         } catch (error) {
             return res.status(500).json({
@@ -217,18 +224,26 @@ module.exports = {
             const comment = req.body
             const user = req.user
             const { gymId } = await userModel.getById(user.id)
-      
-            if (validatorComment.validateCreation(comment)) {
-                return res.status(422).json({
-                    status: false,
-                    message: 'Some comment data is wrong!'
-                })
-            }
+            const gym = await gymModel.getById(gymId)
 
             if (gymId !== comment.gymId) {
                 return res.status(403).json({
                     status: false,
                     message: 'You cannot add a comment in a gym where you are not registered!'
+                })
+            }
+
+            if (!gym) {
+                return res.status(404).json({
+                    status: false,
+                    message: `The gym with id ${gymId} does not exists`
+                })
+            }
+      
+            if (validatorComment.validateCreation(comment)) {
+                return res.status(422).json({
+                    status: false,
+                    message: 'Some comment data is wrong!'
                 })
             }
       
