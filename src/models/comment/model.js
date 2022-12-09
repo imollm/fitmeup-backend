@@ -22,5 +22,8 @@ module.exports = {
         return comments.map(comment => {
             return commentStdObj(comment)
         })
+    },
+    removeCommentsFromGym: async (gymId) => {
+        return await commentDAO.removeCommentsFromGym(gymId)
     }
 }

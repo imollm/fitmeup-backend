@@ -184,7 +184,7 @@ module.exports = {
                 : `An error ocurred while deleting gym with id ${gymId}`
 
             return res.status(statusCode).json({
-                status: isDeleted,
+                status: statusCode === 200,
                 message: msg
             })
         } catch (error) {

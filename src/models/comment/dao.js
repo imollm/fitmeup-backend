@@ -8,5 +8,8 @@ module.exports = {
     },
     getComments: async (gymId) => {
         return await commentCollection.find({ gymId: gymId })
+    },
+    removeCommentsFromGym: async (gymId) => {
+        return await commentCollection.deleteMany({ gymId: gymId })
     }
 }

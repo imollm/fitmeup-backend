@@ -2,6 +2,7 @@
 
 const gymDAO = require('./dao')
 const userModel = require('../user/model')
+const commentModel = require('../../models/comment/model')
 
 const getStdGymObj = (gym) => {
     return {
@@ -63,7 +64,7 @@ module.exports = {
     },
     delete: async (gymId) => {
         const isDeleted = await gymDAO.delete(gymId)
-        // TODO: Remove comments and ratings
-        return isDeleted
+        const isCommentsDeleted = await commentModel.removeCommentsFromGym(gymId)
+        return isDeleted && isCommentsDeleted
     }
 }

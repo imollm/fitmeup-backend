@@ -15,7 +15,8 @@ if (env === 'prod' || env === 'stg') {
         bcryptSalt:             Number(process.env.BCRYPT_SALT),
         superAdminEmail:        process.env.SUPERADMIN_EMAIL,
         superAdminPass:         bcrypt.hashSync(process.env.SUPERADMIN_PASS, bcrypt.genSaltSync(Number(process.env.BCRYPT_SALT))),
-        limitBody:              process.env.API_LIMIT_CONTENT_LENGTH
+        limitBody:              process.env.API_LIMIT_CONTENT_LENGTH,
+        confirmationTokenSecret: parsed.CONFIRMATION_TOKEN_SECRET
     }
 } else {
     const { parsed } = require('dotenv').config()
@@ -29,7 +30,8 @@ if (env === 'prod' || env === 'stg') {
         bcryptSalt:             Number(parsed.BCRYPT_SALT),
         superAdminEmail:        parsed.SUPERADMIN_EMAIL,
         superAdminPass:         bcrypt.hashSync(parsed.SUPERADMIN_PASS, bcrypt.genSaltSync(Number(parsed.BCRYPT_SALT))),
-        limitBody:              parsed.API_LIMIT_CONTENT_LENGTH
+        limitBody:              parsed.API_LIMIT_CONTENT_LENGTH,
+        confirmationTokenSecret: parsed.CONFIRMATION_TOKEN_SECRET
     }
 }
 
