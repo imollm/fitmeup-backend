@@ -841,7 +841,7 @@
                         "examples": {
                             "application/json": {
                                 "status": false,
-                                "message": "<validator_msg_here>"
+                                "message": "Some data of gym is wrong"
                             }
                         }
                     },
@@ -1174,7 +1174,7 @@
                         "examples": {
                             "application/json": {
                                 "status": false,
-                                "message": "<validator_msg_here>"
+                                "message": "Some data of gym is wrong"
                             }
                         }
                     },

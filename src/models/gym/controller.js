@@ -15,7 +15,7 @@ module.exports = {
             if (validation) {
                 return res.status(422).json({
                     status: false,
-                    message: validation
+                    message: 'Some data of gym is wrong'
                 })
             }
 
@@ -129,7 +129,7 @@ module.exports = {
             if (validation) {
                 return res.status(422).json({
                     status: false,
-                    message: validation
+                    message: 'Some data of gym is wrong'
                 })
             }
 
