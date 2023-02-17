@@ -5,6 +5,7 @@
     "main": "index.js",
     "private": true,
     "scripts": {
+        "build": "",
         "start:prod": "NODE_ENV=prod node src/index.js",
         "start:stg": "NODE_ENV=stg node src/index.js",
         "dev": "node --watch src/index.js",
