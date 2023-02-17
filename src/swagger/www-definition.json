@@ -12,7 +12,7 @@
     "schemes": [
         "https"
     ],
-    "host": "fitmeup.up.railway.app",
+    "host": "",
     "basePath": "/api/v1",
     "produces": [
         "application/json"

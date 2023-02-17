@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "Backend to manage Gyms of Fitmeup App",
     "main": "server.js",
+    "private": true,
     "scripts": {
         "start:prod": "NODE_ENV=prod node src/server.js",
         "start:stg": "NODE_ENV=stg node src/server.js",
