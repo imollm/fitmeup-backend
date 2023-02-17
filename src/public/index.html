@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitmeup API</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            display: grid;
+            place-content: center;
+            width: 100vw;
+            height: 100vh;
+            font-family: 'Barlow Semi Condensed', sans-serif;
+            background-color: rgb(66, 66, 164);
+            color: rgb(255, 255, 255);
+            text-transform: uppercase;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            place-content: center;
+        }
+
+        main p {
+            font-size: 3rem;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        li {
+            list-style: none;
+            background-color: #6f6f6f;
+            border-radius: 5px;
+            padding: 6px 8px;
+            cursor: pointer;
+        }
+
+        li a {
+            text-decoration: none;
+            color: white;
+        }
+        
+        li a:active,
+        li a:link,
+        li a:hover {
+            color: white;
+        }
+
+        li:hover { 
+            box-shadow: 0px 0px 20px 10px rgba(0,0,0,0.3);
+            transform: scale(1.1);
+            animation: shadow .2s ease-in-out;
+        }
+
+        @keyframes shadow { 
+            from {box-shadow: 0 4px 10px 0 rgba(0,0,0,0.2); transform: scale(1);}
+            to {box-shadow: 0 4px 12px 7px rgba(0,0,0,0.17); transform: scale(1.1);}
+        }
+
+    </style>
+</head>
+<body>
+    <main>
+        <div>
+            <p>Welcome to Fitmeup API</p>
+        </div>
+        <div>
+            <ul>
+                <li>
+                    <a href="/api-docs" target="_blank" rel="noopener nofollow">
+                        API documentation
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/imollm/fitmeup-backend" target="_blank" rel="noopener nofollow">
+                        Go to repository
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </main>
+</body>
+</html>
