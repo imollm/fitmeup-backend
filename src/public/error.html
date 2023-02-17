@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            display: grid;
+            place-content: center;
+            width: 100vw;
+            height: 100vh;
+            font-family: 'Barlow Semi Condensed', sans-serif;
+            background-color: rgb(66, 66, 164);
+            color: rgb(255, 255, 255);
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="message"></h1>
+</body>
+<script>
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const code = urlParams.get('status') || 500;
+    const message = urlParams.get('email') || 'Server error';
+    const messageEl = document.getElementById('message');
+    messageText = `Error ${code}: ${message}`;
+    messageEl.innerText = messageText;
+</script>
+</html>
