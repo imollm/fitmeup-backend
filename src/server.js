@@ -20,7 +20,7 @@ seedSuperAdmin()
 middlewares.init(app)
 swagger.init(app)
 
-app.use('/api/v1', routes)
+app.use(routes)
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.listen(PORT, () => {

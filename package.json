@@ -2,15 +2,15 @@
     "name": "fitmeup-backend",
     "version": "1.0.0",
     "description": "Backend to manage Gyms of Fitmeup App",
-    "main": "index.js",
+    "main": "server.js",
     "private": true,
     "scripts": {
         "build": "",
-        "start:prod": "NODE_ENV=prod node src/index.js",
-        "start:stg": "NODE_ENV=stg node src/index.js",
-        "dev": "node --watch src/index.js",
+        "start:prod": "NODE_ENV=prod node src/server.js",
+        "start:stg": "NODE_ENV=stg node src/server.js",
+        "dev": "node --watch src/server.js",
         "test": "NODE_ENV=test jest --verbose --silent --detectOpenHandles",
-        "debug": "NODE_ENV=debug node --watch --inspect=0.0.0.0 src/index.js"
+        "debug": "NODE_ENV=debug node --watch --inspect=0.0.0.0 src/server.js"
     },
     "keywords": [],
     "author": "Ivan Moll",

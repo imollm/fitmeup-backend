@@ -8,8 +8,10 @@ module.exports = {
         const pathToApiDefinition = env === 'stg' || env === 'prod'
             ? './www-definition.json'
             : './local-definition.json'
-        
         const swaggerDocument = require(pathToApiDefinition)
-        app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+        const options = { customCssUrl: '../public/swagger-ui.css' }
+
+        app.use('/api-docs', swaggerUi.serve)
+        app.get('/api-docs', swaggerUi.setup(swaggerDocument, options))
     }
 }
